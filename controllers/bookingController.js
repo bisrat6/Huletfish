@@ -44,7 +44,15 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         );
         return `${namePart}${SUFFIX}`;
       })(),
-      description: `Booking payment for ${tour.name}`
+      description: (() => {
+        const MAX_DESC = 50;
+        const PREFIX = 'Booking payment for ';
+        const namePart = (tour.name || 'Tour').slice(
+          0,
+          Math.max(0, MAX_DESC - PREFIX.length)
+        );
+        return `${PREFIX}${namePart}`;
+      })()
     },
     meta: {
       hide_receipt: true, // include identifiers so verify can create booking reliably

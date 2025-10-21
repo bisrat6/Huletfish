@@ -1,323 +1,225 @@
 [
   {
-    "_id": "5c88fa8cf4afda39709c2955",
-    "name": "The Ethiopian Highlands Explorer",
-    "duration": 5,
-    "maxGroupSize": 15,
-    "difficulty": "medium",
-    "price": 500,
-    "ratingsAverage": 4.8,
-    "ratingsQuantity": 6,
-    "summary": "Discover the scenic beauty of Ethiopian highlands",
-    "description": "Explore the majestic mountains, valleys, and lakes of Ethiopia. Enjoy local culture, stunning landscapes, and historical sites.",
-    "imageCover": "https://commons.wikimedia.org/wiki/Special:FilePath/Ethiopian_Highlands_01.jpg",
-    "images": [
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Ethiopian_Highlands_01.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Ethiopian_Highlands_01.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Ethiopian_Highlands_01.jpg"
-    ],
-    "startLocation": {
-      "description": "Addis Ababa, Ethiopia",
-      "type": "Point",
-      "coordinates": [38.7469, 9.0303],
-      "address": "Addis Ababa, Ethiopia"
-    },
-    "startDates": ["2025-11-01T09:00:00.000Z", "2025-12-01T09:00:00.000Z"],
-    "guides": ["5c8a22c62f8fb814b56fa18b", "5c8a1f4e2f8fb814b56fa185"],
-    "locations": [
-      {
-        "_id": "5c88fa8cf4afda39709c2959",
-        "description": "Entoto Hills",
-        "type": "Point",
-        "coordinates": [38.7765, 9.0526],
-        "day": 1
-      },
-      {
-        "_id": "5c88fa8cf4afda39709c2958",
-        "description": "Mount Zuqualla",
-        "type": "Point",
-        "coordinates": [39.0023, 8.81],
-        "day": 2
-      },
-      {
-        "_id": "5c88fa8cf4afda39709c2957",
-        "description": "Debre Libanos Monastery",
-        "type": "Point",
-        "coordinates": [39.0332, 9.8022],
-        "day": 3
-      }
-    ]
-  },
-  {
-    "_id": "5c88fa8cf4afda39709c2951",
-    "name": "The Lalibela Adventure",
-    "duration": 4,
-    "maxGroupSize": 12,
-    "difficulty": "easy",
-    "price": 400,
-    "ratingsAverage": 5,
-    "ratingsQuantity": 9,
-    "summary": "Explore the rock-hewn churches of Lalibela",
-    "description": "Visit Ethiopia's famous UNESCO World Heritage site and learn about its history and culture.",
-    "imageCover": "https://commons.wikimedia.org/wiki/Special:FilePath/Bete_Medhane_Alem_in_Lalibela.JPG",
-    "images": [
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Bete_Medhane_Alem_in_Lalibela.JPG",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Bete_Medhane_Alem_in_Lalibela.JPG",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Bete_Medhane_Alem_in_Lalibela.JPG"
-    ],
-    "startLocation": {
-      "description": "Lalibela, Ethiopia",
-      "type": "Point",
-      "coordinates": [39.0311, 12.0312],
-      "address": "Lalibela, Ethiopia"
-    },
-    "startDates": ["2025-11-05T09:00:00.000Z", "2025-12-10T09:00:00.000Z"],
-    "guides": ["5c8a21d02f8fb814b56fa189", "5c8a201e2f8fb814b56fa186"],
-    "locations": [
-      {
-        "_id": "5c88fa8cf4afda39709c2954",
-        "description": "Bete Medhane Alem",
-        "type": "Point",
-        "coordinates": [39.0315, 12.032],
-        "day": 1
-      },
-      {
-        "_id": "5c88fa8cf4afda39709c2953",
-        "description": "Bete Giyorgis",
-        "type": "Point",
-        "coordinates": [39.0318, 12.0317],
-        "day": 2
-      }
-    ]
-  },
-  {
-    "_id": "5c88fa8cf4afda39709c295a",
-    "name": "The Simien Mountains Trek",
-    "duration": 6,
-    "maxGroupSize": 10,
-    "difficulty": "difficult",
-    "price": 600,
-    "ratingsAverage": 4.5,
-    "ratingsQuantity": 6,
-    "summary": "Trek the breathtaking Simien Mountains",
-    "description": "Experience stunning landscapes, wildlife, and challenging trekking paths in northern Ethiopia.",
-    "imageCover": "https://commons.wikimedia.org/wiki/Special:FilePath/SemienWaterfall.jpg",
-    "images": [
-      "https://commons.wikimedia.org/wiki/Special:FilePath/SemienWaterfall.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/SemienWaterfall.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/SemienWaterfall.jpg"
-    ],
-    "startLocation": {
-      "description": "Gondar, Ethiopia",
-      "type": "Point",
-      "coordinates": [37.4667, 12.6],
-      "address": "Gondar, Ethiopia"
-    },
-    "startDates": ["2025-11-15T09:00:00.000Z", "2025-12-20T09:00:00.000Z"],
-    "guides": ["5c8a21d02f8fb814b56fa189", "5c8a23412f8fb814b56fa18c"],
-    "locations": [
-      {
-        "_id": "5c88fa8cf4afda39709c295c",
-        "description": "Ras Dashen",
-        "type": "Point",
-        "coordinates": [38.321, 13.3],
-        "day": 1
-      },
-      {
-        "_id": "5c88fa8cf4afda39709c295b",
-        "description": "Simien Mountains National Park",
-        "type": "Point",
-        "coordinates": [38.35, 13.2],
-        "day": 2
-      }
-    ]
-  },
-  {
-    "_id": "5c88fa8cf4afda39709c2961",
-    "name": "The Rift Valley Lakes Tour",
-    "duration": 3,
-    "maxGroupSize": 14,
-    "difficulty": "medium",
-    "price": 450,
-    "ratingsAverage": 4.7,
-    "ratingsQuantity": 7,
-    "summary": "Explore the stunning lakes of Ethiopia's Rift Valley",
-    "description": "Visit the beautiful lakes of Ziway, Langano, and Awassa while enjoying local culture and scenery.",
-    "imageCover": "https://commons.wikimedia.org/wiki/Special:FilePath/Lake_Tana,_Ethiopia.jpg",
-    "images": [
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Lake_Tana,_Ethiopia.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Lake_Tana,_Ethiopia.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Lake_Tana,_Ethiopia.jpg"
-    ],
-    "startLocation": {
-      "description": "Addis Ababa, Ethiopia",
-      "type": "Point",
-      "coordinates": [38.7469, 9.0303],
-      "address": "Addis Ababa, Ethiopia"
-    },
-    "startDates": ["2025-11-10T09:00:00.000Z", "2025-12-15T09:00:00.000Z"],
-    "guides": ["5c8a21f22f8fb814b56fa18a", "5c8a23412f8fb814b56fa18c"],
-    "locations": [
-      {
-        "_id": "5c88fa8cf4afda39709c2965",
-        "description": "Lake Ziway",
-        "type": "Point",
-        "coordinates": [38.7333, 8.1],
-        "day": 1
-      },
-      {
-        "_id": "5c88fa8cf4afda39709c2964",
-        "description": "Lake Langano",
-        "type": "Point",
-        "coordinates": [38.7167, 7.95],
-        "day": 2
-      },
-      {
-        "_id": "5c88fa8cf4afda39709c2963",
-        "description": "Lake Awassa",
-        "type": "Point",
-        "coordinates": [38.4167, 7.07],
-        "day": 3
-      }
-    ]
-  },
-  {
-    "_id": "5c88fa8cf4afda39709c295d",
-    "name": "The Axum Heritage Walk",
+    "_id": "7d88fa8cf4afda39709c2955",
+    "name": "Ethiopian Coffee Ceremony Experience",
     "duration": 2,
-    "maxGroupSize": 20,
+    "maxGroupSize": 6,
     "difficulty": "easy",
-    "price": 300,
-    "ratingsAverage": 4.6,
-    "ratingsQuantity": 5,
-    "summary": "Walk through the historic city of Axum",
-    "description": "Discover the ancient obelisks, churches, and ruins of Ethiopia's historic city Axum.",
-    "imageCover": "https://commons.wikimedia.org/wiki/Special:FilePath/Stela_aksum.jpg",
+    "price": 60,
+    "ratingsAverage": 5.0,
+    "ratingsQuantity": 8,
+    "summary": "Join a traditional Ethiopian coffee ceremony with a local host in their home.",
+    "description": "Experience Ethiopia's iconic coffee ceremony, a cultural ritual where guests participate in roasting, grinding, and brewing coffee with a local host. Learn about the history and significance of coffee in Ethiopian culture while enjoying personal interaction in a cozy home setting.",
+    "imageCover": "/img/tours/coffee1.jpg",
     "images": [
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Stela_aksum.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Stela_aksum.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Stela_aksum.jpg"
+      "/img/tours/coffee1.jpg",
+      "/img/tours/coffee2.jpg",
+      "/img/tours/coffee3.jpg"
     ],
     "startLocation": {
-      "description": "Axum, Ethiopia",
+      "description": "Host's Home in Addis Ababa",
       "type": "Point",
-      "coordinates": [38.72, 14.12],
-      "address": "Axum, Ethiopia"
+      "coordinates": [38.7578, 9.0370],
+      "address": "Bole Road, Addis Ababa, Ethiopia"
     },
-    "startDates": ["2025-11-12T09:00:00.000Z", "2025-12-18T09:00:00.000Z"],
-    "guides": ["5c8a22c62f8fb814b56fa18b", "5c8a201e2f8fb814b56fa186"],
+    "startDates": ["2025-11-01T10:00:00.000Z", "2025-11-05T10:00:00.000Z", "2025-11-10T10:00:00.000Z"],
+    "guides": ["5c8a22c62f8fb814b56fa18b"],
     "locations": [
       {
-        "_id": "5c88fa8cf4afda39709c2960",
-        "description": "St. Mary of Zion",
+        "_id": "7d88fa8cf4afda39709c2959",
+        "description": "Host's Living Room for Coffee Ceremony",
         "type": "Point",
-        "coordinates": [38.7205, 14.1205],
+        "coordinates": [38.7578, 9.0370],
         "day": 1
       },
       {
-        "_id": "5c88fa8cf4afda39709c295f",
-        "description": "Queen of Sheba Palace",
+        "_id": "7d88fa8cf4afda39709c2958",
+        "description": "Courtyard for Cultural Discussion",
         "type": "Point",
-        "coordinates": [38.718, 14.121],
+        "coordinates": [38.7580, 9.0372],
+        "day": 1
+      },
+      {
+        "_id": "7d88fa8cf4afda39709c2957",
+        "description": "Nearby Merkato Market for Coffee Insights",
+        "type": "Point",
+        "coordinates": [38.7410, 9.0300],
         "day": 2
       }
     ]
   },
   {
-    "_id": "5c88fa8cf4afda39709c2966",
-    "name": "The Danakil Depression Adventure",
+    "_id": "7d88fa8cf4afda39709c2956",
+    "name": "Ethiopian Injera Cooking Workshop",
     "duration": 3,
-    "maxGroupSize": 8,
-    "difficulty": "difficult",
-    "price": 700,
-    "ratingsAverage": 3.9,
-    "ratingsQuantity": 7,
-    "summary": "Explore the hottest and most surreal landscapes in Ethiopia",
-    "description": "Visit the Dallol sulfur springs, colorful salt flats, and lava lakes of the Danakil Depression.",
-    "imageCover": "https://commons.wikimedia.org/wiki/Special:FilePath/Danakil_Landscape.jpg",
+    "maxGroupSize": 5,
+    "difficulty": "easy",
+    "price": 80,
+    "ratingsAverage": 4.9,
+    "ratingsQuantity": 10,
+    "summary": "Learn to make injera and traditional Ethiopian dishes with a local chef.",
+    "description": "Join a local chef in their Addis Ababa home to master the art of making injera, Ethiopia's staple flatbread, along with dishes like doro wat. Learn about ingredients, techniques, and cultural stories, then enjoy a communal meal with your creations.",
+    "imageCover": "/img/tours/injera4cover.jpg",
     "images": [
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Danakil_Landscape.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Danakil_Landscape.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Danakil_Landscape.jpg"
+      "/img/tours/injera1.jpg",
+      "/img/tours/injera2.jpg",
+      "/img/tours/injera3.jpg"
     ],
     "startLocation": {
-      "description": "Semera, Ethiopia",
+      "description": "Local Chef's Kitchen in Addis Ababa",
       "type": "Point",
-      "coordinates": [40.613, 12.454],
-      "address": "Semera, Ethiopia"
+      "coordinates": [38.7468, 9.0250],
+      "address": "Yeka Sub-City, Addis Ababa, Ethiopia"
     },
-    "startDates": ["2025-11-20T09:00:00.000Z", "2025-12-25T09:00:00.000Z"],
-    "guides": ["5c8a21f22f8fb814b56fa18a", "5c8a1f292f8fb814b56fa184"],
+    "startDates": ["2025-11-03T11:00:00.000Z", "2025-11-07T11:00:00.000Z"],
+    "guides": ["5c8a22c62f8fb814b56fa18c"],
     "locations": [
       {
-        "_id": "5c88fa8cf4afda39709c296b",
-        "description": "Dallol Sulfur Springs",
+        "_id": "7d88fa8cf4afda39709c2960",
+        "description": "Chef's Kitchen",
         "type": "Point",
-        "coordinates": [40.245, 14.241],
+        "coordinates": [38.7468, 9.0250],
         "day": 1
       },
       {
-        "_id": "5c88fa8cf4afda39709c296a",
-        "description": "Erta Ale Volcano",
+        "_id": "7d88fa8cf4afda39709c2961",
+        "description": "Backyard for Spices & Ingredients",
         "type": "Point",
-        "coordinates": [40.663, 13.609],
-        "day": 2
+        "coordinates": [38.7470, 9.0252],
+        "day": 1
       },
       {
-        "_id": "5c88fa8cf4afda39709c2969",
-        "description": "Salt Flats",
+        "_id": "7d88fa8cf4afda39709c2962",
+        "description": "Local Market for Fresh Ingredients",
         "type": "Point",
-        "coordinates": [40.25, 14.2],
-        "day": 3
+        "coordinates": [38.7450, 9.0260],
+        "day": 2
       }
     ]
   },
   {
-    "_id": "5c88fa8cf4afda39709c2970",
-    "name": "The Bale Mountains Hike",
-    "duration": 4,
-    "maxGroupSize": 8,
-    "difficulty": "medium",
-    "price": 550,
+    "_id": "7d88fa8cf4afda39709c2957",
+    "name": "Ethiopian Basket Weaving Immersion",
+    "duration": 1,
+    "maxGroupSize": 4,
+    "difficulty": "easy",
+    "price": 50,
     "ratingsAverage": 4.8,
     "ratingsQuantity": 6,
-    "summary": "Hiking and wildlife exploration in Bale Mountains",
-    "description": "Observe Ethiopian wolves, scenic waterfalls, and high-altitude plateaus.",
-    "imageCover": "https://commons.wikimedia.org/wiki/Special:FilePath/Bale_Mountns.jpg",
+    "summary": "Create traditional Ethiopian baskets with a skilled artisan.",
+    "description": "Join an artisan in their Addis Ababa studio to learn the craft of Ethiopian basket weaving. Participants will practice traditional techniques, create their own basket, and take it home as a unique souvenir, all while learning about its cultural significance.",
+    "imageCover": "/img/tours/basket1.jpg",
     "images": [
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Bale_Mountns.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Bale_Mountns.jpg",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Bale_Mountns.jpg"
+      "/img/tours/basket4.jpg",
+      "/img/tours/basket2.jpg",
+      "/img/tours/basket3.jpg"
     ],
     "startLocation": {
-      "description": "Bale, Ethiopia",
+      "description": "Artisan Studio in Addis Ababa",
       "type": "Point",
-      "coordinates": [39.9973, 6.9833],
-      "address": "Bale, Ethiopia"
+      "coordinates": [38.7633, 9.0050],
+      "address": "Kazanchis, Addis Ababa, Ethiopia"
     },
-    "startDates": ["2025-11-18T09:00:00.000Z", "2025-12-22T09:00:00.000Z"],
-    "guides": ["5c8a21d02f8fb814b56fa189", "5c8a1f292f8fb814b56fa184"],
+    "startDates": ["2025-11-02T09:00:00.000Z", "2025-11-06T09:00:00.000Z"],
+    "guides": ["5c8a22c62f8fb814b56fa18d"],
     "locations": [
       {
-        "_id": "5c88fa8cf4afda39709c2973",
-        "description": "Sanetti Plateau",
+        "_id": "7d88fa8cf4afda39709c2963",
+        "description": "Studio Main Room",
         "type": "Point",
-        "coordinates": [39.999, 6.9835],
+        "coordinates": [38.7633, 9.0050],
         "day": 1
       },
       {
-        "_id": "5c88fa8cf4afda39709c2972",
-        "description": "Web Valley",
+        "_id": "7d88fa8cf4afda39709c2964",
+        "description": "Workshop Corner",
         "type": "Point",
-        "coordinates": [39.995, 6.98],
-        "day": 2
+        "coordinates": [38.7635, 9.0052],
+        "day": 1
+      }
+    ]
+  },
+  {
+    "_id": "7d88fa8cf4afda39709c2958",
+    "name": "Ethiopian Music & Dance Experience",
+    "duration": 2,
+    "maxGroupSize": 5,
+    "difficulty": "easy",
+    "price": 70,
+    "ratingsAverage": 5.0,
+    "ratingsQuantity": 9,
+    "summary": "Learn traditional Ethiopian music and dance with a local family.",
+    "description": "Spend two days with a local family in Addis Ababa learning traditional Ethiopian songs, instruments like the krar, and dances such as eskista. This immersive experience offers hands-on learning and cultural storytelling in a warm home environment.",
+    "imageCover": "/img/tours/dance1.jpg",
+    "images": [
+      "/img/tours/dance4.jpg",
+      "/img/tours/dance2.jpg",
+      "/img/tours/dance3.jpg"
+    ],
+    "startLocation": {
+      "description": "Family Home in Addis Ababa",
+      "type": "Point",
+      "coordinates": [38.7490, 9.0150],
+      "address": "Lideta, Addis Ababa, Ethiopia"
+    },
+    "startDates": ["2025-11-04T10:00:00.000Z", "2025-11-08T10:00:00.000Z"],
+    "guides": ["5c8a22c62f8fb814b56fa18e"],
+    "locations": [
+      {
+        "_id": "7d88fa8cf4afda39709c2965",
+        "description": "Living Room Music Space",
+        "type": "Point",
+        "coordinates": [38.7490, 9.0150],
+        "day": 1
       },
       {
-        "_id": "5c88fa8cf4afda39709c2971",
-        "description": "Harenna Forest",
+        "_id": "7d88fa8cf4afda39709c2966",
+        "description": "Courtyard for Dance Practice",
         "type": "Point",
-        "coordinates": [39.985, 6.975],
-        "day": 3
+        "coordinates": [38.7492, 9.0152],
+        "day": 2
+      }
+    ]
+  },
+  {
+    "_id": "7d88fa8cf4afda39709c2959",
+    "name": "Ethiopian Tea Ceremony & Storytelling",
+    "duration": 1,
+    "maxGroupSize": 6,
+    "difficulty": "easy",
+    "price": 55,
+    "ratingsAverage": 4.9,
+    "ratingsQuantity": 7,
+    "summary": "Enjoy a tea ceremony and cultural storytelling with a local host.",
+    "description": "Join a local host in their Addis Ababa home for a traditional tea ceremony, learning about tea preparation and tasting. The experience is enriched with storytelling about Ethiopian traditions, history, and local life, creating a warm and immersive cultural exchange.",
+    "imageCover": "/img/tours/tea1.jpg",
+    "images": [
+      "/img/tours/tea2.jpg",
+      "/img/tours/tea3.jpg",
+      "/img/tours/tea4.jpg"
+    ],
+    "startLocation": {
+      "description": "Host's Tea Room in Addis Ababa",
+      "type": "Point",
+      "coordinates": [38.7550, 9.0200],
+      "address": "Arada, Addis Ababa, Ethiopia"
+    },
+    "startDates": ["2025-11-03T09:00:00.000Z", "2025-11-07T09:00:00.000Z"],
+    "guides": ["5c8a22c62f8fb814b56fa18f"],
+    "locations": [
+      {
+        "_id": "7d88fa8cf4afda39709c2967",
+        "description": "Tea Room Main Area",
+        "type": "Point",
+        "coordinates": [38.7550, 9.0200],
+        "day": 1
+      },
+      {
+        "_id": "7d88fa8cf4afda39709c2968",
+        "description": "Courtyard for Tea Tasting",
+        "type": "Point",
+        "coordinates": [38.7552, 9.0202],
+        "day": 1
       }
     ]
   }

@@ -41,7 +41,7 @@
     "email": "bekele.tesfaye@example.com",
     "role": "guide",
     "active": true,
-    "photo": "user-5.jpg",
+    "photo": "/img/users/guide-1.jpg",
     "password": "$2a$12$OOPr90tBEBF1Iho3ox0Jde0O/WXUR0VLA5xdh6tWcu7qb.qOCvSg2"
   },
   {
@@ -50,7 +50,7 @@
     "email": "selamawit.bekele@example.com",
     "role": "guide",
     "active": true,
-    "photo": "user-6.jpg",
+    "photo": "/img/users/guide-2.jpg",
     "password": "$2a$12$XCXvvlhRBJ8CydKH09v1v.jpg0hB9gVVfMVEoz4MsxqL9zb5PrF42"
   },
   {
@@ -59,7 +59,7 @@
     "email": "lulit.desta@example.com",
     "role": "guide",
     "active": true,
-    "photo": "user-7.jpg",
+    "photo": "/img/users/guide-3.jpg",
     "password": "$2a$12$II1F3aBSFDF3Xz7iB4rk/.a2dogwkClMN5gGCWrRlILrG1xtJG7q6"
   },
   {
@@ -86,7 +86,7 @@
     "email": "haile.tadesse@example.com",
     "role": "lead-guide",
     "active": true,
-    "photo": "user-10.jpg",
+    "photo": "/img/users/guide-4.jpg",
     "password": "$2a$12$q7v9dm.S4DvqhAeBc4KwduedEDEkDe2GGFGzteW6xnHt120oRpkqm"
   },
   {
@@ -95,7 +95,7 @@
     "email": "abebe.mekonnen@example.com",
     "role": "lead-guide",
     "active": true,
-    "photo": "user-11.jpg",
+    "photo": "/img/users/guide-5.jpg",
     "password": "$2a$12$lKWhzujFvQwG4m/X3mnTneOB3ib9IYETsOqQ8aN5QEWDjX6X2wJJm"
   },
   {
@@ -104,7 +104,7 @@
     "email": "muluwork.solomon@example.com",
     "role": "lead-guide",
     "active": true,
-    "photo": "user-12.jpg",
+    "photo": "/img/users/guide-1.jpg",
     "password": "$2a$12$.XIvvmznHQSa9UOI639yhe4vzHKCYO1vpTUZc4d45oiT4GOZQe1kS"
   },
   {
@@ -113,7 +113,7 @@
     "email": "kebede.demissie@example.com",
     "role": "guide",
     "active": true,
-    "photo": "user-13.jpg",
+    "photo": "/img/users/guide-2.jpg",
     "password": "$2a$12$D3fyuS9ETdBBw5lOwceTMuZcDTyVq28ieeGUAanIuLMcSDz6bpfIe"
   },
   {

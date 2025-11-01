@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
-  tour: {
+  experience: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Tour',
-    required: [true, 'Booking must belong to a Tour!']
+    ref: 'Experience',
+    required: [true, 'Booking must belong to an Experience!']
   },
   user: {
     type: mongoose.Schema.ObjectId,
@@ -13,7 +13,7 @@ const bookingSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    require: [true, 'Booking must have a price.']
+    required: [true, 'Booking must have a price.']
   },
   txRef: {
     type: String,
@@ -23,7 +23,7 @@ const bookingSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   paid: {
     type: Boolean,
@@ -33,8 +33,8 @@ const bookingSchema = new mongoose.Schema({
 
 bookingSchema.pre(/^find/, function(next) {
   this.populate('user').populate({
-    path: 'tour',
-    select: 'name'
+    path: 'experience',
+    select: 'title'
   });
   next();
 });

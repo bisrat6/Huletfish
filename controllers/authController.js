@@ -142,7 +142,18 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
-    // roles ['admin', 'lead-guide']. role='user'
+    // Check if user has the required role
+    // 'host' means the user must have hostStatus === 'approved'
+    if (roles.includes('host')) {
+      if (req.user.role === 'admin' || req.user.hostStatus === 'approved') {
+        return next();
+      }
+      return next(
+        new AppError('You do not have permission to perform this action. Approved host or admin required.', 403)
+      );
+    }
+    
+    // For other roles, check normally
     if (!roles.includes(req.user.role)) {
       return next(
         new AppError('You do not have permission to perform this action', 403)
@@ -244,7 +255,7 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
     const welcomeBase = process.env.FRONTEND_URL
       ? process.env.FRONTEND_URL.replace(/\/$/, '')
       : 'http://localhost:8080';
-    const welcomeURL = `${welcomeBase}/tours`; // Redirect to tours page
+    const welcomeURL = `${welcomeBase}/experiences`; // Redirect to experiences page
     await new Email(user, welcomeURL).sendWelcome();
   } catch (err) {
     // If welcome email fails, don't block verification but log error in non-production

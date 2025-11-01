@@ -18,8 +18,34 @@ const userSchema = new mongoose.Schema({
   photo: String,
   role: {
     type: String,
-    enum: ['user', 'guide', 'lead-guide', 'admin'],
+    enum: ['user', 'admin'],
     default: 'user'
+  },
+  hostStatus: {
+    type: String,
+    enum: ['none', 'pending', 'approved', 'rejected'],
+    default: 'none'
+  },
+  hostApplicationDate: Date,
+  // Host application data
+  hostApplicationData: {
+    // Personal Information
+    fullName: String,
+    phoneNumber: String,
+    cityRegion: String,
+    fullAddress: String,
+    languagesSpoken: [String],
+    aboutYou: String,
+    // Experience Details (will be stored here or in separate documents)
+    // Media URLs
+    mediaUrls: [String],
+    // Fayda Authentication
+    faydaId: String,
+    faydaVerified: {
+      type: Boolean,
+      default: false
+    },
+    faydaVerificationDate: Date
   },
   password: {
     type: String,

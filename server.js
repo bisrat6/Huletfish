@@ -15,11 +15,7 @@ const app = require('./app');
 const DB = process.env.DATABASE || process.env.DATABASE_LOCAL;
 
 mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-  })
+  .connect(DB)
   .then(() => console.log('DB connection successful!'))
   .catch(err => {
     console.error('DB connection error:', err);
@@ -27,8 +23,11 @@ mongoose
   });
 
 const port = process.env.PORT || 3000;
-const server = app.listen(port, () => {
-  console.log(`App running on port ${port}...`);
+// Listen on all network interfaces (0.0.0.0) to allow connections from other machines
+const host = process.env.HOST || '0.0.0.0';
+const server = app.listen(port, host, () => {
+  console.log(`App running on ${host}:${port}...`);
+  console.log(`Access from network: http://${host === '0.0.0.0' ? 'localhost' : host}:${port}`);
 });
 
 process.on('unhandledRejection', err => {

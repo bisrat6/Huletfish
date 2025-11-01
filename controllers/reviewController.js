@@ -2,9 +2,9 @@ const Review = require('./../models/reviewModel');
 const factory = require('./handlerFactory');
 // const catchAsync = require('./../utils/catchAsync');
 
-exports.setTourUserIds = (req, res, next) => {
+exports.setExperienceUserIds = (req, res, next) => {
   // Allow nested routes
-  if (!req.body.tour) req.body.tour = req.params.tourId;
+  if (!req.body.experience) req.body.experience = req.params.experienceId;
   if (!req.body.user) req.body.user = req.user.id;
   next();
 };

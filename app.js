@@ -10,10 +10,11 @@ const hpp = require('hpp');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
-const tourRouter = require('./routes/tourRoutes');
+const experienceRouter = require('./routes/experienceRoutes');
 const userRouter = require('./routes/userRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const hostApplicationRouter = require('./routes/hostApplicationRoutes');
 
 const app = express();
 
@@ -26,7 +27,8 @@ const allowedOrigins = process.env.FRONTEND_URL
       'http://localhost:8080',
       'http://localhost:5173',
       'http://localhost:3000',
-      'http://127.0.0.1:8080'
+      'http://127.0.0.1:8080',
+      'http://10.5.214.91:8080'
     ];
 
 app.use(
@@ -34,9 +36,14 @@ app.use(
     origin: function(origin, callback) {
       // Allow requests with no origin like mobile apps or curl
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1) {
+      
+      // Also allow origins that match IP patterns (for development)
+      const isLocalNetwork = /^http:\/\/(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(origin);
+      
+      if (allowedOrigins.indexOf(origin) !== -1 || isLocalNetwork) {
         callback(null, true);
       } else {
+        console.log(`CORS blocked origin: ${origin}. Allowed origins:`, allowedOrigins);
         callback(new Error('CORS policy: This origin is not allowed.'));
       }
     },
@@ -99,10 +106,11 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES
-app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/experiences', experienceRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
+app.use('/api/v1/host-applications', hostApplicationRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

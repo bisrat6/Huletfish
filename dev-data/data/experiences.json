@@ -1,0 +1,147 @@
+[
+  {
+    "_id": "7d88fa8cf4afda39709c2955",
+    "duration": "2 hours",
+    "price": 60,
+    "ratingsAverage": 5,
+    "ratingsQuantity": 8,
+    "summary": "Join a traditional Ethiopian coffee ceremony with a local host in their home.",
+    "description": "Experience Ethiopia's iconic coffee ceremony, a cultural ritual where guests participate in roasting, grinding, and brewing coffee with a local host. Learn about the history and significance of coffee in Ethiopian culture while enjoying personal interaction in a cozy home setting.",
+    "imageCover": "/img/tours/coffee1.jpg",
+    "images": [
+      "/img/tours/coffee1.jpg",
+      "/img/tours/coffee2.jpg",
+      "/img/tours/coffee3.jpg"
+    ],
+    "startLocation": {
+      "description": "Host's Home in Addis Ababa",
+      "type": "Point",
+      "coordinates": [
+        38.7578,
+        9.037
+      ],
+      "address": "Bole Road, Addis Ababa, Ethiopia"
+    },
+    "title": "Ethiopian Coffee Ceremony Experience",
+    "maxGuests": 6,
+    "host": "5c8a22c62f8fb814b56fa18b",
+    "location": "Bole Road, Addis Ababa, Ethiopia",
+    "status": "approved"
+  },
+  {
+    "_id": "7d88fa8cf4afda39709c2956",
+    "duration": "3 hours",
+    "price": 80,
+    "ratingsAverage": 4.9,
+    "ratingsQuantity": 10,
+    "summary": "Learn to make injera and traditional Ethiopian dishes with a local chef.",
+    "description": "Join a local chef in their Addis Ababa home to master the art of making injera, Ethiopia's staple flatbread, along with dishes like doro wat. Learn about ingredients, techniques, and cultural stories, then enjoy a communal meal with your creations.",
+    "imageCover": "/img/tours/injera4cover.jpg",
+    "images": [
+      "/img/tours/injera1.jpg",
+      "/img/tours/injera2.jpg",
+      "/img/tours/injera3.jpg"
+    ],
+    "startLocation": {
+      "description": "Local Chef's Kitchen in Addis Ababa",
+      "type": "Point",
+      "coordinates": [
+        38.7468,
+        9.025
+      ],
+      "address": "Yeka Sub-City, Addis Ababa, Ethiopia"
+    },
+    "title": "Ethiopian Injera Cooking Workshop",
+    "maxGuests": 5,
+    "host": "5c8a22c62f8fb814b56fa18c",
+    "location": "Yeka Sub-City, Addis Ababa, Ethiopia",
+    "status": "approved"
+  },
+  {
+    "_id": "7d88fa8cf4afda39709c2957",
+    "duration": "1 hours",
+    "price": 50,
+    "ratingsAverage": 4.8,
+    "ratingsQuantity": 6,
+    "summary": "Create traditional Ethiopian baskets with a skilled artisan.",
+    "description": "Join an artisan in their Addis Ababa studio to learn the craft of Ethiopian basket weaving. Participants will practice traditional techniques, create their own basket, and take it home as a unique souvenir, all while learning about its cultural significance.",
+    "imageCover": "/img/tours/basket1.jpg",
+    "images": [
+      "/img/tours/basket4.jpg",
+      "/img/tours/basket2.jpg",
+      "/img/tours/basket3.jpg"
+    ],
+    "startLocation": {
+      "description": "Artisan Studio in Addis Ababa",
+      "type": "Point",
+      "coordinates": [
+        38.7633,
+        9.005
+      ],
+      "address": "Kazanchis, Addis Ababa, Ethiopia"
+    },
+    "title": "Ethiopian Basket Weaving Immersion",
+    "maxGuests": 4,
+    "host": "5c8a22c62f8fb814b56fa18d",
+    "location": "Kazanchis, Addis Ababa, Ethiopia",
+    "status": "approved"
+  },
+  {
+    "_id": "7d88fa8cf4afda39709c2958",
+    "duration": "2 hours",
+    "price": 70,
+    "ratingsAverage": 5,
+    "ratingsQuantity": 9,
+    "summary": "Learn traditional Ethiopian music and dance with a local family.",
+    "description": "Spend two days with a local family in Addis Ababa learning traditional Ethiopian songs, instruments like the krar, and dances such as eskista. This immersive experience offers hands-on learning and cultural storytelling in a warm home environment.",
+    "imageCover": "/img/tours/dance1.jpg",
+    "images": [
+      "/img/tours/dance4.jpg",
+      "/img/tours/dance2.jpg",
+      "/img/tours/dance3.jpg"
+    ],
+    "startLocation": {
+      "description": "Family Home in Addis Ababa",
+      "type": "Point",
+      "coordinates": [
+        38.749,
+        9.015
+      ],
+      "address": "Lideta, Addis Ababa, Ethiopia"
+    },
+    "title": "Ethiopian Music & Dance Experience",
+    "maxGuests": 5,
+    "host": "5c8a22c62f8fb814b56fa18e",
+    "location": "Lideta, Addis Ababa, Ethiopia",
+    "status": "approved"
+  },
+  {
+    "_id": "7d88fa8cf4afda39709c2959",
+    "duration": "1 hours",
+    "price": 55,
+    "ratingsAverage": 4.9,
+    "ratingsQuantity": 7,
+    "summary": "Enjoy a tea ceremony and cultural storytelling with a local host.",
+    "description": "Join a local host in their Addis Ababa home for a traditional tea ceremony, learning about tea preparation and tasting. The experience is enriched with storytelling about Ethiopian traditions, history, and local life, creating a warm and immersive cultural exchange.",
+    "imageCover": "/img/tours/tea1.jpg",
+    "images": [
+      "/img/tours/tea2.jpg",
+      "/img/tours/tea3.jpg",
+      "/img/tours/tea4.jpg"
+    ],
+    "startLocation": {
+      "description": "Host's Tea Room in Addis Ababa",
+      "type": "Point",
+      "coordinates": [
+        38.755,
+        9.02
+      ],
+      "address": "Arada, Addis Ababa, Ethiopia"
+    },
+    "title": "Ethiopian Tea Ceremony & Storytelling",
+    "maxGuests": 6,
+    "host": "5c8a22c62f8fb814b56fa18f",
+    "location": "Arada, Addis Ababa, Ethiopia",
+    "status": "approved"
+  }
+]

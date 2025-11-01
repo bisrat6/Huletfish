@@ -1,14 +1,14 @@
 const axios = require('axios');
-const Tour = require('./../models/tourModel');
+const Experience = require('./../models/experienceModel');
 const Booking = require('./../models/bookingModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
-  // 1️⃣ Get the tour being booked
-  const tour = await Tour.findById(req.params.tourId);
-  if (!tour) {
-    return next(new AppError('No tour found with that ID', 404));
+  // 1️⃣ Get the experience being booked
+  const experience = await Experience.findById(req.params.experienceId);
+  if (!experience) {
+    return next(new AppError('No experience found with that ID', 404));
   }
 
   // 2️⃣ Create a unique transaction reference
@@ -19,10 +19,14 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const frontendBase = process.env.FRONTEND_URL
     ? process.env.FRONTEND_URL.replace(/\/$/, '')
     : 'http://localhost:8080';
-  const returnUrl = `${frontendBase}/my-bookings`;
+  // Include txRef in the return URL so frontend can trigger verification if
+  // the server-to-server callback is delayed or missing.
+  const returnUrl = `${frontendBase}/my-bookings?tx_ref=${encodeURIComponent(
+    txRef
+  )}`;
 
   const payload = {
-    amount: String(tour.price), // Chapa expects string amount
+    amount: String(experience.price), // Chapa expects string amount
     currency: 'ETB',
     email: req.user.email,
     first_name: (req.user.name || '').split(' ')[0] || 'Guest',
@@ -38,7 +42,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       title: (() => {
         const MAX = 16;
         const SUFFIX = ' Pay'; // keeps title short but meaningful
-        const namePart = (tour.name || 'Tour').slice(
+        const namePart = (experience.title || 'Experience').slice(
           0,
           Math.max(0, MAX - SUFFIX.length)
         );
@@ -47,7 +51,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       description: (() => {
         const MAX_DESC = 50;
         const PREFIX = 'Booking payment for ';
-        const namePart = (tour.name || 'Tour').slice(
+        const namePart = (experience.title || 'Experience').slice(
           0,
           Math.max(0, MAX_DESC - PREFIX.length)
         );
@@ -56,9 +60,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     },
     meta: {
       hide_receipt: true, // include identifiers so verify can create booking reliably
-      tourId: String(tour._id),
+      experienceId: String(experience._id),
       userId: String(req.user._id),
-      price: tour.price
+      price: experience.price
     }
   };
 
@@ -97,7 +101,23 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   }
 });
 exports.verifyPayment = catchAsync(async (req, res, next) => {
-  const { tx_ref: txRefParam } = req.params;
+  // Accept tx_ref from URL param or POST body to support gateway callbacks
+  const txRefParam =
+    (req.params && req.params.tx_ref) ||
+    (req.body && (req.body.tx_ref || req.body.txRef || req.body.reference));
+
+  if (!txRefParam) {
+    // eslint-disable-next-line no-console
+    if (process.env.NODE_ENV !== 'production')
+      console.log('verifyPayment called without tx_ref in params or body', {
+        params: req.params,
+        body: req.body
+      });
+    return res.status(400).json({
+      status: 'failed',
+      message: 'tx_ref is required for verification'
+    });
+  }
 
   const verifyUrl = `https://api.chapa.co/v1/transaction/verify/${txRefParam}`;
   try {
@@ -113,15 +133,33 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
 
     // Chapa uses different strings; treat 'success' or 'paid' as paid states
     if (txnStatus === 'success' || txnStatus === 'paid') {
-      // Use meta included in the transaction to create the booking immediately.
-      const meta = txn.meta || {};
-      const tourId = meta.tourId || null;
-      const userId = meta.userId || null;
-      const amount = txn.amount || meta.price || null;
+      // Try several places for meta (some gateway responses wrap meta differently)
+      let meta = {};
+      if (txn && txn.meta) meta = txn.meta;
+      else if (txn && txn.data && txn.data.meta) meta = txn.data.meta;
+      else if (txn && txn.customization && txn.customization.meta)
+        meta = txn.customization.meta;
 
-      if (tourId && userId) {
+      // If meta was stringified on the gateway side, try to parse it
+      if (meta && typeof meta === 'string') {
+        try {
+          meta = JSON.parse(meta);
+        } catch (e) {
+          // leave as-is and proceed
+        }
+      }
+
+      const experienceId = meta ? meta.experienceId || meta.experience || null : null;
+      const userId = meta ? meta.userId || meta.user || null : null;
+      // coerce amount to Number if possible
+      const amountRaw =
+        txn && txn.amount ? txn.amount : meta ? meta.price : null;
+      const amount = amountRaw ? Number(amountRaw) : null;
+
+      if (experienceId && userId) {
         // Prefer dedupe by transaction reference if available
-        const txRef = txn.tx_ref || txn.txRef || txRefParam || null;
+        const txRef =
+          txn.tx_ref || txn.txRef || txn.reference || txRefParam || null;
 
         if (txRef) {
           const existingByTx = await Booking.findOne({ txRef });
@@ -132,20 +170,31 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
           }
         }
 
-        // Fallback: try to find similar booking by tour/user/price
+        // Fallback: try to find similar booking by experience/user/price
         const existing = await Booking.findOne({
-          tour: tourId,
+          experience: experienceId,
           user: userId,
           price: amount
         });
         if (!existing) {
           const bookingData = {
-            tour: tourId,
+            experience: experienceId,
             user: userId,
             price: amount,
             paid: true
           };
           if (txRef) bookingData.txRef = txRef;
+
+          // Debug log meta if running in development
+          if (process.env.NODE_ENV !== 'production') {
+            // eslint-disable-next-line no-console
+            console.log(
+              'Creating booking with data:',
+              bookingData,
+              'rawMeta:',
+              meta
+            );
+          }
 
           const booking = await Booking.create(bookingData);
           return res

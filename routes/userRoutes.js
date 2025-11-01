@@ -18,12 +18,27 @@ router.get('/me', userController.getMe, userController.getUser);
 router.patch('/updateMe', userController.updateMe);
 router.delete('/deleteMe', userController.deleteMe);
 
+// Host application routes
+router.post('/applyForHost', userController.applyForHost);
+
 router.use(authController.restrictTo('admin'));
 
 router
   .route('/')
   .get(userController.getAllUsers)
   .post(userController.createUser);
+
+router
+  .route('/pending-hosts')
+  .get(userController.getPendingHostApplications);
+
+router
+  .route('/approve-host/:id')
+  .patch(userController.approveHost);
+
+router
+  .route('/reject-host/:id')
+  .patch(userController.rejectHost);
 
 router
   .route('/:id')

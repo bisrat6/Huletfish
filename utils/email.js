@@ -70,4 +70,8 @@ module.exports = class Email {
   async sendEmailVerification() {
     await this.send('emailVerification', 'Please verify your email address');
   }
+
+  async sendHostApproval() {
+    await this.send('hostApproval', 'Congratulations! Your Host Application is Approved');
+  }
 };

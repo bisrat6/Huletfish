@@ -24,4 +24,7 @@ router.post('/verify', bookingController.verifyPayment);
 // 🔹 Get current user's bookings
 router.get('/me', authController.protect, bookingController.getMyBookings);
 
+// 🔹 Get bookings for host's experiences
+router.get('/host/bookings', authController.protect, bookingController.getHostBookings);
+
 module.exports = router;

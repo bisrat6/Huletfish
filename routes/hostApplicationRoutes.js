@@ -1,6 +1,7 @@
 const express = require('express');
 const hostApplicationController = require('./../controllers/hostApplicationController');
 const authController = require('./../controllers/authController');
+const uploadMiddleware = require('./../middlewares/uploadMiddleware');
 
 const router = express.Router();
 
@@ -11,9 +12,17 @@ router.use(authController.protect);
 router.post('/', hostApplicationController.createOrUpdateApplication);
 router.patch('/experience-details', hostApplicationController.updateExperienceDetails);
 router.patch('/media', hostApplicationController.updateMedia);
-router.post('/fayda/initiate-otp', hostApplicationController.initiateFaydaOTP);
-router.post('/fayda/verify-otp', hostApplicationController.verifyFaydaOTP);
+
+// File upload route
+router.post(
+  '/upload-media',
+  uploadMiddleware.uploadHostMediaFiles,
+  uploadMiddleware.handleMulterErrors,
+  hostApplicationController.processHostMediaUpload
+);
+
 router.post('/submit', hostApplicationController.submitApplication);
+router.post('/reapply', hostApplicationController.reapplyApplication);
 router.get('/my-application', hostApplicationController.getMyApplication);
 
 // Admin routes

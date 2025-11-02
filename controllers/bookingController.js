@@ -237,3 +237,25 @@ exports.getMyBookings = catchAsync(async (req, res, next) => {
     .status(200)
     .json({ status: 'success', results: bookings.length, data: bookings });
 });
+
+// Get bookings for host's experiences
+exports.getHostBookings = catchAsync(async (req, res, next) => {
+  // Get all experiences hosted by this user
+  const experiences = await Experience.find({ host: req.user._id });
+  const experienceIds = experiences.map(exp => exp._id);
+
+  // Get all bookings for these experiences
+  const bookings = await Booking.find({ 
+    experience: { $in: experienceIds } 
+  }).populate('user', 'name email').populate('experience', 'title price location');
+
+  // Calculate total earnings
+  const totalEarnings = bookings.reduce((sum, booking) => sum + (booking.price || 0), 0);
+
+  res.status(200).json({ 
+    status: 'success', 
+    results: bookings.length,
+    totalEarnings,
+    data: bookings 
+  });
+});

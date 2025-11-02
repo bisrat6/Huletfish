@@ -2,13 +2,33 @@ const HostApplication = require('./../models/hostApplicationModel');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
-const { FaydaAuth } = require('fayda-auth');
+const Email = require('./../utils/email');
+const { cloudinary } = require('./../utils/multerConfig');
 
-// Initialize Fayda Auth client
-const faydaAuth = new FaydaAuth({
-  apiKey: process.env.FAYDA_API_KEY || '',
-  baseUrl: process.env.FAYDA_BASE_URL || 'https://fayda-auth.vercel.app/api/fayda'
-});
+// Helper function to delete Cloudinary assets
+const deleteCloudinaryAssets = async (urls) => {
+  if (!urls || urls.length === 0) return;
+  
+  const urlArray = Array.isArray(urls) ? urls : [urls];
+  
+  for (const url of urlArray) {
+    if (!url) continue;
+    try {
+      // Extract public_id from Cloudinary URL
+      // URL format: https://res.cloudinary.com/{cloud_name}/image/upload/v{version}/{public_id}.{format}
+      const parts = url.split('/');
+      const filename = parts[parts.length - 1];
+      const publicId = `etxplore/host-applications/${filename.split('.')[0]}`;
+      
+      await cloudinary.uploader.destroy(publicId);
+    } catch (err) {
+      // Log error but don't block rejection
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Error deleting Cloudinary asset:', err);
+      }
+    }
+  }
+};
 
 // Create or update host application (Step 1: Personal Info)
 exports.createOrUpdateApplication = catchAsync(async (req, res, next) => {
@@ -97,117 +117,110 @@ exports.updateMedia = catchAsync(async (req, res, next) => {
   });
 });
 
-// Initiate Fayda OTP (Step 4)
-exports.initiateFaydaOTP = catchAsync(async (req, res, next) => {
+// Process uploaded media files (Step 3 - File Upload)
+exports.processHostMediaUpload = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const { fcn } = req.body; // Fayda Card Number (16 digits)
 
-  if (!fcn || fcn.length !== 16) {
-    return next(new AppError('Please provide a valid 16-digit Fayda Card Number', 400));
-  }
-
-  const application = await HostApplication.findOne({
+  // Find or create application
+  let application = await HostApplication.findOne({
     user: userId,
     status: { $in: ['draft', 'submitted', 'pending'] }
   });
 
   if (!application) {
-    return next(new AppError('No active host application found', 404));
-  }
-
-  try {
-    // Initiate OTP request
-    const initiateResponse = await faydaAuth.initiateOTP(fcn);
-
-    // Store transaction ID and FCN in application
-    application.faydaAuth = application.faydaAuth || {};
-    application.faydaAuth.transactionId = initiateResponse.transactionId;
-    application.faydaAuth.fcn = fcn;
-    application.faydaAuth.otpInitiatedAt = new Date();
-    await application.save();
-
-    res.status(200).json({
-      status: 'success',
-      message: 'OTP sent successfully',
-      data: {
-        transactionId: initiateResponse.transactionId,
-        // Don't send full response for security
-      }
+    // Create new application if it doesn't exist
+    application = await HostApplication.create({
+      user: userId,
+      status: 'draft'
     });
-  } catch (error) {
-    console.error('Fayda OTP initiation error:', error);
-    return next(new AppError(error.message || 'Failed to initiate OTP', 500));
   }
+
+  // Extract uploaded file URLs from Cloudinary
+  const media = {};
+
+  if (req.files) {
+    if (req.files.nationalIdFront && req.files.nationalIdFront[0]) {
+      media.nationalIdFront = req.files.nationalIdFront[0].path;
+    }
+
+    if (req.files.nationalIdBack && req.files.nationalIdBack[0]) {
+      media.nationalIdBack = req.files.nationalIdBack[0].path;
+    }
+
+    if (req.files.personalPhoto && req.files.personalPhoto[0]) {
+      media.personalPhoto = req.files.personalPhoto[0].path;
+    }
+
+    if (req.files.hostingEnvironmentPhotos) {
+      media.hostingEnvironmentPhotos = req.files.hostingEnvironmentPhotos.map(file => file.path);
+    }
+  }
+
+  // Update media fields
+  application.media = {
+    ...application.media,
+    ...media
+  };
+
+  await application.save();
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Media uploaded successfully',
+    data: {
+      application,
+      uploadedFiles: {
+        nationalIdFront: media.nationalIdFront || null,
+        nationalIdBack: media.nationalIdBack || null,
+        personalPhoto: media.personalPhoto || null,
+        hostingEnvironmentPhotos: media.hostingEnvironmentPhotos || []
+      }
+    }
+  });
 });
 
-// Verify Fayda OTP (Step 4)
-exports.verifyFaydaOTP = catchAsync(async (req, res, next) => {
+// Reapply after rejection - reset rejected application to draft
+exports.reapplyApplication = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const { otp } = req.body;
-
-  if (!otp || otp.length !== 6) {
-    return next(new AppError('Please provide a valid 6-digit OTP', 400));
-  }
 
   const application = await HostApplication.findOne({
     user: userId,
-    status: { $in: ['draft', 'submitted', 'pending'] }
-  }).populate('user');
+    status: 'rejected'
+  });
 
   if (!application) {
-    return next(new AppError('No active host application found', 404));
+    return next(new AppError('No rejected application found', 404));
   }
 
-  if (!application.faydaAuth?.transactionId || !application.faydaAuth?.fcn) {
-    return next(new AppError('OTP not initiated. Please initiate OTP first', 400));
-  }
+  // Reset application to draft status
+  application.status = 'draft';
+  application.submittedAt = undefined;
+  application.reviewedAt = undefined;
+  application.reviewedBy = undefined;
+  application.rejectionReason = undefined;
+  
+  // Clear media fields (user will need to re-upload)
+  application.media = {
+    nationalIdFront: undefined,
+    nationalIdBack: undefined,
+    personalPhoto: undefined,
+    hostingEnvironmentPhotos: []
+  };
+  
+  await application.save();
 
-  try {
-    // Verify OTP
-    const verifyResponse = await faydaAuth.verifyOTP(
-      application.faydaAuth.transactionId,
-      otp,
-      application.faydaAuth.fcn
-    );
+  // Update user hostStatus back to none
+  const user = await User.findById(userId);
+  user.hostStatus = 'none';
+  await user.save({ validateBeforeSave: false });
 
-    if (!verifyResponse.success) {
-      return next(new AppError('OTP verification failed', 400));
+  res.status(200).json({
+    status: 'success',
+    message: 'You can now update and resubmit your application',
+    data: {
+      application
     }
-
-    // Update application with verified Fayda info
-    application.faydaAuth = {
-      ...application.faydaAuth,
-      verified: true,
-      verificationDate: new Date(),
-      faydaUserInfo: {
-        uin: verifyResponse.user?.uin,
-        fullName: verifyResponse.user?.fullName,
-        dateOfBirth: verifyResponse.user?.dateOfBirth,
-        gender: verifyResponse.user?.gender,
-        phone: verifyResponse.user?.phone,
-        region: verifyResponse.user?.region,
-        // Store other user fields as needed
-        ...verifyResponse.user
-      },
-      photo: verifyResponse.photo,
-      qrCode: verifyResponse.qrCode
-    };
-
-    await application.save();
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Fayda verification successful',
-      data: {
-        verified: true,
-        user: verifyResponse.user
-        // Don't send sensitive data like photo/qrCode in response
-      }
-    });
-  } catch (error) {
-    console.error('Fayda OTP verification error:', error);
-    return next(new AppError(error.message || 'OTP verification failed', 500));
-  }
+  });
 });
 
 // Submit application for review
@@ -229,8 +242,18 @@ exports.submitApplication = catchAsync(async (req, res, next) => {
       !application.personalInfo?.phoneNumber ||
       !application.personalInfo?.cityRegion ||
       !application.personalInfo?.aboutYou ||
-      !application.faydaAuth?.verified) {
+      !application.personalInfo?.languagesSpoken || 
+      application.personalInfo.languagesSpoken.length === 0) {
     return next(new AppError('Please complete all required fields before submitting', 400));
+  }
+
+  // Validate required media uploads
+  if (!application.media?.nationalIdFront ||
+      !application.media?.nationalIdBack ||
+      !application.media?.personalPhoto ||
+      !application.media?.hostingEnvironmentPhotos ||
+      application.media.hostingEnvironmentPhotos.length === 0) {
+    return next(new AppError('Please upload all required media: National ID (front and back), personal photo, and at least one hosting environment photo', 400));
   }
 
   // Update application status
@@ -241,7 +264,7 @@ exports.submitApplication = catchAsync(async (req, res, next) => {
   const user = await User.findById(userId);
   user.hostStatus = 'pending';
   user.hostApplicationDate = new Date();
-  await user.save();
+  await user.save({ validateBeforeSave: false });
 
   await application.save();
 
@@ -315,9 +338,23 @@ exports.approveApplication = catchAsync(async (req, res, next) => {
   // Update user hostStatus
   const user = await User.findById(application.user._id);
   user.hostStatus = 'approved';
-  await user.save();
+  await user.save({ validateBeforeSave: false });
 
   await application.save();
+
+  // Send approval email
+  try {
+    const frontendBase = process.env.FRONTEND_URL
+      ? process.env.FRONTEND_URL.replace(/\/$/, '')
+      : 'http://localhost:8080';
+    const dashboardURL = `${frontendBase}/host/dashboard`;
+    await new Email(user, dashboardURL).sendHostApproval();
+  } catch (err) {
+    // Don't block approval if email fails, just log error
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Error sending host approval email:', err);
+    }
+  }
 
   res.status(200).json({
     status: 'success',
@@ -341,6 +378,18 @@ exports.rejectApplication = catchAsync(async (req, res, next) => {
     return next(new AppError('Application is not pending', 400));
   }
 
+  // Delete uploaded media from Cloudinary
+  if (application.media) {
+    const mediaUrls = [
+      application.media.nationalIdFront,
+      application.media.nationalIdBack,
+      application.media.personalPhoto,
+      ...(application.media.hostingEnvironmentPhotos || [])
+    ].filter(Boolean);
+    
+    await deleteCloudinaryAssets(mediaUrls);
+  }
+
   // Update application
   application.status = 'rejected';
   application.reviewedAt = new Date();
@@ -350,7 +399,7 @@ exports.rejectApplication = catchAsync(async (req, res, next) => {
   // Update user hostStatus
   const user = await User.findById(application.user._id);
   user.hostStatus = 'rejected';
-  await user.save();
+  await user.save({ validateBeforeSave: false });
 
   await application.save();
 

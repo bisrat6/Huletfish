@@ -302,6 +302,33 @@ exports.getMyApplication = catchAsync(async (req, res, next) => {
   });
 });
 
+// Get any user's application (Admin only)
+exports.getUserApplication = catchAsync(async (req, res, next) => {
+  const userId = req.params.userId;
+
+  // Find the most recent application for this user (approved or submitted)
+  const application = await HostApplication.findOne({
+    user: userId,
+    status: { $in: ['approved', 'submitted', 'pending'] }
+  })
+  .sort('-createdAt')
+  .populate('user', 'name email photo');
+
+  if (!application) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'No application found for this user'
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      application
+    }
+  });
+});
+
 // Get all pending applications (Admin only)
 exports.getAllPendingApplications = catchAsync(async (req, res, next) => {
   const applications = await HostApplication.find({ status: 'pending' })

@@ -28,6 +28,7 @@ router.get('/my-application', hostApplicationController.getMyApplication);
 // Admin routes
 router.use(authController.restrictTo('admin'));
 router.get('/pending', hostApplicationController.getAllPendingApplications);
+router.get('/user/:userId', hostApplicationController.getUserApplication);
 router.patch('/:id/approve', hostApplicationController.approveApplication);
 router.patch('/:id/reject', hostApplicationController.rejectApplication);
 

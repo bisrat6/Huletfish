@@ -5,6 +5,7 @@ const path = require('path');
 const Experience = require('./../../models/experienceModel');
 const Review = require('./../../models/reviewModel');
 const User = require('./../../models/userModel');
+const HostApplication = require('./../../models/hostApplicationModel');
 
 dotenv.config({ path: path.join(__dirname, '..', '..', 'config.env') });
 
@@ -74,6 +75,16 @@ const reviews = JSON.parse(
   fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8')
 );
 
+let hostApplications = [];
+try {
+  hostApplications = JSON.parse(
+    fs.readFileSync(`${__dirname}/host-applications.json`, 'utf-8')
+  );
+  console.log(`Found ${hostApplications.length} host applications to import`);
+} catch (err) {
+  console.log('No host-applications.json found, skipping host applications import');
+}
+
 // IMPORT DATA INTO DB
 const importData = async () => {
   try {
@@ -81,12 +92,19 @@ const importData = async () => {
     await Experience.deleteMany();
     await User.deleteMany();
     await Review.deleteMany();
+    await HostApplication.deleteMany();
     console.log('Cleaned existing data');
     
     // Create users so we can reference them for host
     // Use insertMany with raw: true to bypass validators since passwords are already hashed
     await User.insertMany(users);
     console.log('Users loaded!');
+    
+    // Create host applications
+    if (hostApplications.length > 0) {
+      await HostApplication.create(hostApplications);
+      console.log('Host applications loaded!');
+    }
     
     // Then create experiences
     await Experience.create(experiences);
@@ -114,6 +132,7 @@ const deleteData = async () => {
     await Experience.deleteMany();
     await User.deleteMany();
     await Review.deleteMany();
+    await HostApplication.deleteMany();
     console.log('Data successfully deleted!');
   } catch (err) {
     console.log(err);

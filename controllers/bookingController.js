@@ -3,6 +3,7 @@ const Experience = require('./../models/experienceModel');
 const Booking = require('./../models/bookingModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const { increaseAvailableBalance } = require('../services/walletService');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1️⃣ Get the experience being booked
@@ -25,8 +26,23 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     txRef
   )}`;
 
+  const requestedQtyRaw = Number(req.query.qty) || 1;
+  const qty = Math.max(1, Math.floor(requestedQtyRaw));
+
+  // Enforce availability (remaining spots)
+  const existing = await Booking.find({ experience: experience._id });
+  const bookedSpots = existing.reduce((sum, b) => sum + (b.quantity || 1), 0);
+  const maxGuests = Number(experience.maxGuests) || 0;
+  const availableSpots = Math.max(0, maxGuests - bookedSpots);
+  if (availableSpots <= 0) {
+    return next(new AppError('This experience is sold out.', 400));
+  }
+  if (qty > availableSpots) {
+    return next(new AppError(`Only ${availableSpots} spot(s) left. Please reduce guests.`, 400));
+  }
+  const totalAmount = Number(experience.price) * qty;
   const payload = {
-    amount: String(experience.price), // Chapa expects string amount
+    amount: String(totalAmount), // Chapa expects string amount
     currency: 'ETB',
     email: req.user.email,
     first_name: (req.user.name || '').split(' ')[0] || 'Guest',
@@ -62,7 +78,8 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       hide_receipt: true, // include identifiers so verify can create booking reliably
       experienceId: String(experience._id),
       userId: String(req.user._id),
-      price: experience.price
+      price: experience.price,
+      numGuests: qty
     }
   };
 
@@ -152,9 +169,16 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
       const experienceId = meta ? meta.experienceId || meta.experience || null : null;
       const userId = meta ? meta.userId || meta.user || null : null;
       // coerce amount to Number if possible
-      const amountRaw =
-        txn && txn.amount ? txn.amount : meta ? meta.price : null;
-      const amount = amountRaw ? Number(amountRaw) : null;
+      const amountRaw = txn && txn.amount ? txn.amount : null;
+      const unitPrice = meta && meta.price ? Number(meta.price) : null;
+      let amount = amountRaw ? Number(amountRaw) : null;
+      let quantity = meta && meta.numGuests ? Number(meta.numGuests) : 1;
+      if ((!quantity || quantity < 1) && amount != null && unitPrice != null && unitPrice > 0) {
+        quantity = Math.max(1, Math.round(amount / unitPrice));
+      }
+      if (amount == null && unitPrice != null && quantity != null) {
+        amount = unitPrice * quantity;
+      }
 
       if (experienceId && userId) {
         // Prefer dedupe by transaction reference if available
@@ -180,7 +204,8 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
           const bookingData = {
             experience: experienceId,
             user: userId,
-            price: amount,
+            price: amount, // total amount paid
+            quantity,
             paid: true
           };
           if (txRef) bookingData.txRef = txRef;
@@ -197,6 +222,21 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
           }
 
           const booking = await Booking.create(bookingData);
+          // Credit host wallet (available) for this booking amount
+          try {
+            const exp = await Experience.findById(experienceId).select('host');
+            if (exp && exp.host && Number.isFinite(amount)) {
+              await increaseAvailableBalance(exp.host, Math.round(Number(amount) * 100), {
+                refType: 'Booking',
+                refId: txRef || String(booking._id)
+              });
+            }
+          } catch (e) {
+            if (process.env.NODE_ENV !== 'production') {
+              // eslint-disable-next-line no-console
+              console.error('Wallet credit failed for booking', e);
+            }
+          }
           return res
             .status(200)
             .json({ status: 'success', booking, raw: data });
@@ -258,4 +298,15 @@ exports.getHostBookings = catchAsync(async (req, res, next) => {
     totalEarnings,
     data: bookings 
   });
+});
+
+// Availability for an experience (remaining spots)
+exports.getAvailability = catchAsync(async (req, res, next) => {
+  const experienceId = req.params.experienceId;
+  const exp = await Experience.findById(experienceId).select('maxGuests');
+  if (!exp) return next(new AppError('Experience not found', 404));
+  const bookings = await Booking.find({ experience: experienceId });
+  const booked = bookings.reduce((sum, b) => sum + (b.quantity || 1), 0);
+  const available = Math.max(0, (Number(exp.maxGuests) || 0) - booked);
+  res.status(200).json({ status: 'success', data: { booked, available, maxGuests: exp.maxGuests } });
 });

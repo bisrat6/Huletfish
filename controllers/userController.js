@@ -28,7 +28,19 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'email',
+    'cbeAccountName',
+    'cbeAccountNumber'
+  );
+
+  // Only allow approved hosts (non-admin) to update CBE fields
+  if (!req.user || req.user.role === 'admin' || req.user.hostStatus !== 'approved') {
+    delete filteredBody.cbeAccountName;
+    delete filteredBody.cbeAccountNumber;
+  }
 
   // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {

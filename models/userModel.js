@@ -80,6 +80,12 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+// Host payout banking (CBE-only)
+userSchema.add({
+  cbeAccountName: { type: String },
+  cbeAccountNumber: { type: String }
+});
+
 userSchema.pre('save', async function(next) {
   // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();

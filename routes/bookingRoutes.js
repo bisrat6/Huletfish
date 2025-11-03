@@ -27,4 +27,7 @@ router.get('/me', authController.protect, bookingController.getMyBookings);
 // 🔹 Get bookings for host's experiences
 router.get('/host/bookings', authController.protect, bookingController.getHostBookings);
 
+// 🔹 Availability for an experience
+router.get('/availability/:experienceId', bookingController.getAvailability);
+
 module.exports = router;

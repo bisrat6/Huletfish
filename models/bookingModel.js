@@ -15,6 +15,11 @@ const bookingSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Booking must have a price.']
   },
+  quantity: {
+    type: Number,
+    default: 1,
+    min: 1
+  },
   txRef: {
     type: String,
     trim: true

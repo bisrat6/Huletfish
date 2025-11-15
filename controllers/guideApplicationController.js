@@ -1,4 +1,4 @@
-const HostApplication = require('./../models/hostApplicationModel');
+const GuideApplication = require('./../models/guideApplicationModel');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
@@ -15,10 +15,9 @@ const deleteCloudinaryAssets = async (urls) => {
     if (!url) continue;
     try {
       // Extract public_id from Cloudinary URL
-      // URL format: https://res.cloudinary.com/{cloud_name}/image/upload/v{version}/{public_id}.{format}
       const parts = url.split('/');
       const filename = parts[parts.length - 1];
-      const publicId = `etxplore/host-applications/${filename.split('.')[0]}`;
+      const publicId = `etxplore/guide-applications/${filename.split('.')[0]}`;
       
       await cloudinary.uploader.destroy(publicId);
     } catch (err) {
@@ -30,14 +29,14 @@ const deleteCloudinaryAssets = async (urls) => {
   }
 };
 
-// Create or update host application (Step 1: Personal Info)
+// Create or update guide application (Step 1: Personal Info)
 exports.createOrUpdateApplication = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
-  // Check if user already has an approved host status
+  // Check if user already has an approved guide status
   const user = await User.findById(userId);
-  if (user.hostStatus === 'approved') {
-    return next(new AppError('You are already an approved host', 400));
+  if (user.guideStatus === 'approved') {
+    return next(new AppError('You are already an approved guide', 400));
   }
 
   const applicationData = {
@@ -47,7 +46,7 @@ exports.createOrUpdateApplication = catchAsync(async (req, res, next) => {
   };
 
   // Find existing draft application or create new one
-  let application = await HostApplication.findOne({
+  let application = await GuideApplication.findOne({
     user: userId,
     status: { $in: ['draft', 'submitted', 'pending'] }
   });
@@ -58,7 +57,7 @@ exports.createOrUpdateApplication = catchAsync(async (req, res, next) => {
     await application.save();
   } else {
     // Create new application
-    application = await HostApplication.create(applicationData);
+    application = await GuideApplication.create(applicationData);
   }
 
   res.status(200).json({
@@ -73,13 +72,13 @@ exports.createOrUpdateApplication = catchAsync(async (req, res, next) => {
 exports.updateExperienceDetails = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
-  const application = await HostApplication.findOne({
+  const application = await GuideApplication.findOne({
     user: userId,
     status: { $in: ['draft', 'submitted', 'pending'] }
   });
 
   if (!application) {
-    return next(new AppError('No active host application found', 404));
+    return next(new AppError('No active guide application found', 404));
   }
 
   application.experienceDetails = req.body.experienceDetails || application.experienceDetails;
@@ -97,13 +96,13 @@ exports.updateExperienceDetails = catchAsync(async (req, res, next) => {
 exports.updateMedia = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
-  const application = await HostApplication.findOne({
+  const application = await GuideApplication.findOne({
     user: userId,
     status: { $in: ['draft', 'submitted', 'pending'] }
   });
 
   if (!application) {
-    return next(new AppError('No active host application found', 404));
+    return next(new AppError('No active guide application found', 404));
   }
 
   application.media = req.body.media || application.media;
@@ -118,18 +117,18 @@ exports.updateMedia = catchAsync(async (req, res, next) => {
 });
 
 // Process uploaded media files (Step 3 - File Upload)
-exports.processHostMediaUpload = catchAsync(async (req, res, next) => {
+exports.processGuideMediaUpload = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
   // Find or create application
-  let application = await HostApplication.findOne({
+  let application = await GuideApplication.findOne({
     user: userId,
     status: { $in: ['draft', 'submitted', 'pending'] }
   });
 
   if (!application) {
     // Create new application if it doesn't exist
-    application = await HostApplication.create({
+    application = await GuideApplication.create({
       user: userId,
       status: 'draft'
     });
@@ -151,8 +150,8 @@ exports.processHostMediaUpload = catchAsync(async (req, res, next) => {
       media.personalPhoto = req.files.personalPhoto[0].path;
     }
 
-    if (req.files.hostingEnvironmentPhotos) {
-      media.hostingEnvironmentPhotos = req.files.hostingEnvironmentPhotos.map(file => file.path);
+    if (req.files.tourGuideCertificate && req.files.tourGuideCertificate[0]) {
+      media.tourGuideCertificate = req.files.tourGuideCertificate[0].path;
     }
   }
 
@@ -173,7 +172,7 @@ exports.processHostMediaUpload = catchAsync(async (req, res, next) => {
         nationalIdFront: media.nationalIdFront || null,
         nationalIdBack: media.nationalIdBack || null,
         personalPhoto: media.personalPhoto || null,
-        hostingEnvironmentPhotos: media.hostingEnvironmentPhotos || []
+        tourGuideCertificate: media.tourGuideCertificate || null
       }
     }
   });
@@ -183,7 +182,7 @@ exports.processHostMediaUpload = catchAsync(async (req, res, next) => {
 exports.reapplyApplication = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
-  const application = await HostApplication.findOne({
+  const application = await GuideApplication.findOne({
     user: userId,
     status: 'rejected'
   });
@@ -204,14 +203,14 @@ exports.reapplyApplication = catchAsync(async (req, res, next) => {
     nationalIdFront: undefined,
     nationalIdBack: undefined,
     personalPhoto: undefined,
-    hostingEnvironmentPhotos: []
+    tourGuideCertificate: undefined
   };
   
   await application.save();
 
-  // Update user hostStatus back to none
+  // Update user guideStatus back to none
   const user = await User.findById(userId);
-  user.hostStatus = 'none';
+  user.guideStatus = 'none';
   await user.save({ validateBeforeSave: false });
 
   res.status(200).json({
@@ -227,13 +226,13 @@ exports.reapplyApplication = catchAsync(async (req, res, next) => {
 exports.submitApplication = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
-  const application = await HostApplication.findOne({
+  const application = await GuideApplication.findOne({
     user: userId,
     status: { $in: ['draft', 'submitted'] }
   });
 
   if (!application) {
-    return next(new AppError('No host application found', 404));
+    return next(new AppError('No guide application found', 404));
   }
 
   // Validate that all required fields are filled
@@ -251,26 +250,25 @@ exports.submitApplication = catchAsync(async (req, res, next) => {
   if (!application.media?.nationalIdFront ||
       !application.media?.nationalIdBack ||
       !application.media?.personalPhoto ||
-      !application.media?.hostingEnvironmentPhotos ||
-      application.media.hostingEnvironmentPhotos.length === 0) {
-    return next(new AppError('Please upload all required media: National ID (front and back), personal photo, and at least one hosting environment photo', 400));
+      !application.media?.tourGuideCertificate) {
+    return next(new AppError('Please upload all required media: National ID (front and back), personal photo, and tour guide certificate', 400));
   }
 
   // Update application status
   application.status = 'pending';
   application.submittedAt = new Date();
 
-  // Update user hostStatus
+  // Update user guideStatus
   const user = await User.findById(userId);
-  user.hostStatus = 'pending';
-  user.hostApplicationDate = new Date();
+  user.guideStatus = 'pending';
+  user.guideApplicationDate = new Date();
   await user.save({ validateBeforeSave: false });
 
   await application.save();
 
   res.status(200).json({
     status: 'success',
-    message: 'Host application submitted successfully',
+    message: 'Guide application submitted successfully',
     data: {
       application
     }
@@ -281,7 +279,7 @@ exports.submitApplication = catchAsync(async (req, res, next) => {
 exports.getMyApplication = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
-  const application = await HostApplication.findOne({
+  const application = await GuideApplication.findOne({
     user: userId
   }).populate('user', 'name email');
 
@@ -307,7 +305,7 @@ exports.getUserApplication = catchAsync(async (req, res, next) => {
   const userId = req.params.userId;
 
   // Find the most recent application for this user (approved or submitted)
-  const application = await HostApplication.findOne({
+  const application = await GuideApplication.findOne({
     user: userId,
     status: { $in: ['approved', 'submitted', 'pending'] }
   })
@@ -331,7 +329,7 @@ exports.getUserApplication = catchAsync(async (req, res, next) => {
 
 // Get all pending applications (Admin only)
 exports.getAllPendingApplications = catchAsync(async (req, res, next) => {
-  const applications = await HostApplication.find({ status: 'pending' })
+  const applications = await GuideApplication.find({ status: 'pending' })
     .populate('user', 'name email photo')
     .sort('-submittedAt');
 
@@ -344,9 +342,9 @@ exports.getAllPendingApplications = catchAsync(async (req, res, next) => {
   });
 });
 
-// Approve host application (Admin only)
+// Approve guide application (Admin only)
 exports.approveApplication = catchAsync(async (req, res, next) => {
-  const application = await HostApplication.findById(req.params.id)
+  const application = await GuideApplication.findById(req.params.id)
     .populate('user');
 
   if (!application) {
@@ -362,20 +360,13 @@ exports.approveApplication = catchAsync(async (req, res, next) => {
   application.reviewedAt = new Date();
   application.reviewedBy = req.user.id;
 
-  // Update user hostStatus
+  // Update user guideStatus and location
   const user = await User.findById(application.user._id);
-  user.hostStatus = 'approved';
-  
-  // Assign guide if provided
-  if (req.body.guideId) {
-    // Verify that the guideId is a valid approved guide
-    const guide = await User.findById(req.body.guideId);
-    if (!guide || guide.guideStatus !== 'approved') {
-      return next(new AppError('Invalid guide ID or guide is not approved', 400));
-    }
-    user.assignedGuide = req.body.guideId;
+  user.guideStatus = 'approved';
+  // Set location from personalInfo.cityRegion
+  if (application.personalInfo?.cityRegion) {
+    user.location = application.personalInfo.cityRegion;
   }
-  
   await user.save({ validateBeforeSave: false });
 
   await application.save();
@@ -385,27 +376,27 @@ exports.approveApplication = catchAsync(async (req, res, next) => {
     const frontendBase = process.env.FRONTEND_URL
       ? process.env.FRONTEND_URL.replace(/\/$/, '')
       : 'http://localhost:8080';
-    const dashboardURL = `${frontendBase}/host/dashboard`;
-    await new Email(user, dashboardURL).sendHostApproval();
+    const dashboardURL = `${frontendBase}/guide/dashboard`;
+    await new Email(user, dashboardURL).sendHostApproval(); // Reuse host approval email template
   } catch (err) {
     // Don't block approval if email fails, just log error
     if (process.env.NODE_ENV !== 'production') {
-      console.error('Error sending host approval email:', err);
+      console.error('Error sending guide approval email:', err);
     }
   }
 
   res.status(200).json({
     status: 'success',
-    message: 'Host application approved',
+    message: 'Guide application approved',
     data: {
       application
     }
   });
 });
 
-// Reject host application (Admin only)
+// Reject guide application (Admin only)
 exports.rejectApplication = catchAsync(async (req, res, next) => {
-  const application = await HostApplication.findById(req.params.id)
+  const application = await GuideApplication.findById(req.params.id)
     .populate('user');
 
   if (!application) {
@@ -422,7 +413,7 @@ exports.rejectApplication = catchAsync(async (req, res, next) => {
       application.media.nationalIdFront,
       application.media.nationalIdBack,
       application.media.personalPhoto,
-      ...(application.media.hostingEnvironmentPhotos || [])
+      application.media.tourGuideCertificate
     ].filter(Boolean);
     
     await deleteCloudinaryAssets(mediaUrls);
@@ -434,16 +425,16 @@ exports.rejectApplication = catchAsync(async (req, res, next) => {
   application.reviewedBy = req.user.id;
   application.rejectionReason = req.body.rejectionReason || 'Application rejected';
 
-  // Update user hostStatus
+  // Update user guideStatus
   const user = await User.findById(application.user._id);
-  user.hostStatus = 'rejected';
+  user.guideStatus = 'rejected';
   await user.save({ validateBeforeSave: false });
 
   await application.save();
 
   res.status(200).json({
     status: 'success',
-    message: 'Host application rejected',
+    message: 'Guide application rejected',
     data: {
       application
     }

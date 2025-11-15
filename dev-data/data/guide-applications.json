@@ -1,0 +1,153 @@
+[
+  {
+    "_id": "7a8b9c0d1e2f3a4b5c6d7e8f",
+    "user": "5c8a1f292f8fb814b56fa184",
+    "personalInfo": {
+      "fullName": "Bekele Tesfaye",
+      "email": "bekele.tesfaye@example.com",
+      "phoneNumber": "+251911111111",
+      "cityRegion": "Gondar, Ethiopia",
+      "fullAddress": "Gondar City Center, Near Fasilides Castle, Guide Office Building, Room 101",
+      "languagesSpoken": ["Amharic", "English", "Tigrinya"],
+      "aboutYou": "I am a certified tour guide with over 15 years of experience leading tours in the historic city of Gondar. I specialize in cultural and historical tours, particularly focusing on the Royal Enclosure and Fasilides Castle. I have a deep passion for Ethiopian history and love sharing our rich heritage with visitors from around the world."
+    },
+    "experienceDetails": {
+      "experienceTypes": ["Historical Tours", "Cultural Tours", "City Tours"],
+      "specialties": ["Gondar History", "Royal Enclosure", "Ethiopian Architecture", "Cultural Heritage"],
+      "previousExperience": "I have been a licensed tour guide since 2009, certified by the Ethiopian Ministry of Culture and Tourism. I've led thousands of tours for international visitors, tour groups, and educational institutions. I'm fluent in multiple languages and have received excellent reviews from travelers on various platforms."
+    },
+    "media": {
+      "nationalIdFront": "https://res.cloudinary.com/demo/image/upload/sample_id_front.jpg",
+      "nationalIdBack": "https://res.cloudinary.com/demo/image/upload/sample_id_back.jpg",
+      "personalPhoto": "https://res.cloudinary.com/demo/image/upload/sample_person.jpg",
+      "tourGuideCertificate": "https://res.cloudinary.com/demo/image/upload/sample_certificate.pdf"
+    },
+    "status": "approved",
+    "submittedAt": "2024-01-10T10:00:00.000Z",
+    "reviewedAt": "2024-01-11T14:00:00.000Z",
+    "reviewedBy": "5c8a1d5b0190b214360dc057",
+    "createdAt": "2024-01-10T09:00:00.000Z",
+    "updatedAt": "2024-01-11T14:00:00.000Z"
+  },
+  {
+    "_id": "7a8b9c0d1e2f3a4b5c6d7e90",
+    "user": "5c8a1f4e2f8fb814b56fa185",
+    "personalInfo": {
+      "fullName": "Selamawit Bekele",
+      "email": "selamawit.bekele@example.com",
+      "phoneNumber": "+251922222222",
+      "cityRegion": "Addis Ababa, Ethiopia",
+      "fullAddress": "Bole Sub-City, Edna Mall Area, Guide Services Office, Suite 205",
+      "languagesSpoken": ["Amharic", "English", "Oromiffa", "French"],
+      "aboutYou": "I am a professional tour guide based in Addis Ababa with 12 years of experience. I specialize in city tours, cultural experiences, and food tours. I have extensive knowledge of Ethiopian culture, history, and cuisine. I'm passionate about creating memorable experiences for visitors and helping them discover the authentic side of Ethiopia."
+    },
+    "experienceDetails": {
+      "experienceTypes": ["City Tours", "Food Tours", "Cultural Experiences", "Shopping Tours"],
+      "specialties": ["Addis Ababa History", "Ethiopian Cuisine", "Local Markets", "Cultural Immersion"],
+      "previousExperience": "I've been working as a tour guide in Addis Ababa since 2012. I'm certified by the Ethiopian Tour Guide Association and have led tours for major travel agencies, hotels, and independent travelers. I've received numerous positive reviews and have been featured in travel blogs and guidebooks."
+    },
+    "media": {
+      "nationalIdFront": "https://res.cloudinary.com/demo/image/upload/sample_id_front2.jpg",
+      "nationalIdBack": "https://res.cloudinary.com/demo/image/upload/sample_id_back2.jpg",
+      "personalPhoto": "https://res.cloudinary.com/demo/image/upload/sample_person2.jpg",
+      "tourGuideCertificate": "https://res.cloudinary.com/demo/image/upload/sample_certificate2.pdf"
+    },
+    "status": "approved",
+    "submittedAt": "2024-01-12T10:00:00.000Z",
+    "reviewedAt": "2024-01-13T10:30:00.000Z",
+    "reviewedBy": "5c8a1d5b0190b214360dc057",
+    "createdAt": "2024-01-12T08:30:00.000Z",
+    "updatedAt": "2024-01-13T10:30:00.000Z"
+  },
+  {
+    "_id": "7a8b9c0d1e2f3a4b5c6d7e91",
+    "user": "5c8a201e2f8fb814b56fa186",
+    "personalInfo": {
+      "fullName": "Lulit Desta",
+      "email": "lulit.desta@example.com",
+      "phoneNumber": "+251933333333",
+      "cityRegion": "Lalibela, Ethiopia",
+      "fullAddress": "Lalibela Town, Near the Rock-Hewn Churches, Guide Association Office",
+      "languagesSpoken": ["Amharic", "English", "Tigrinya"],
+      "aboutYou": "I am a specialized guide for the rock-hewn churches of Lalibela, one of Ethiopia's most important UNESCO World Heritage sites. With 18 years of experience, I have deep knowledge of the history, architecture, and religious significance of these remarkable structures. I'm passionate about preserving and sharing this unique heritage."
+    },
+    "experienceDetails": {
+      "experienceTypes": ["Religious Tours", "Historical Tours", "UNESCO Heritage Tours"],
+      "specialties": ["Lalibela Churches", "Ethiopian Orthodox Christianity", "Rock-Hewn Architecture", "Religious History"],
+      "previousExperience": "I've been guiding visitors through the Lalibela churches since 2006. I'm certified by the Ethiopian Ministry of Culture and Tourism and the Lalibela Guide Association. I've guided thousands of pilgrims, tourists, and researchers. My expertise has been recognized by major travel publications and tour operators."
+    },
+    "media": {
+      "nationalIdFront": "https://res.cloudinary.com/demo/image/upload/sample_id_front3.jpg",
+      "nationalIdBack": "https://res.cloudinary.com/demo/image/upload/sample_id_back3.jpg",
+      "personalPhoto": "https://res.cloudinary.com/demo/image/upload/sample_person3.jpg",
+      "tourGuideCertificate": "https://res.cloudinary.com/demo/image/upload/sample_certificate3.pdf"
+    },
+    "status": "approved",
+    "submittedAt": "2024-01-14T10:00:00.000Z",
+    "reviewedAt": "2024-01-15T11:00:00.000Z",
+    "reviewedBy": "5c8a1d5b0190b214360dc057",
+    "createdAt": "2024-01-14T09:00:00.000Z",
+    "updatedAt": "2024-01-15T11:00:00.000Z"
+  },
+  {
+    "_id": "7a8b9c0d1e2f3a4b5c6d7e92",
+    "user": "5c8a21d02f8fb814b56fa189",
+    "personalInfo": {
+      "fullName": "Haile Tadesse",
+      "email": "haile.tadesse@example.com",
+      "phoneNumber": "+251944444444",
+      "cityRegion": "Addis Ababa, Ethiopia",
+      "fullAddress": "Kazanchis Area, Behind Commercial Bank of Ethiopia, Professional Guide Services, Office 12",
+      "languagesSpoken": ["Amharic", "English", "Oromiffa", "Tigrinya"],
+      "aboutYou": "I am an experienced tour guide specializing in Addis Ababa and surrounding areas. With 14 years of experience, I offer comprehensive city tours, day trips, and cultural experiences. I have extensive knowledge of Ethiopian history, culture, and current affairs. I'm known for my friendly personality and ability to connect with travelers from diverse backgrounds."
+    },
+    "experienceDetails": {
+      "experienceTypes": ["City Tours", "Day Trips", "Cultural Experiences", "Historical Tours"],
+      "specialties": ["Addis Ababa", "Ethiopian History", "Cultural Immersion", "Multi-day Tours"],
+      "previousExperience": "I've been a professional guide since 2010, working with major tour operators and independent travelers. I'm certified by the Ethiopian Tour Guide Association and have completed advanced training programs. I've led tours for government delegations, corporate groups, and individual travelers, consistently receiving excellent feedback."
+    },
+    "media": {
+      "nationalIdFront": "https://res.cloudinary.com/demo/image/upload/sample_id_front4.jpg",
+      "nationalIdBack": "https://res.cloudinary.com/demo/image/upload/sample_id_back4.jpg",
+      "personalPhoto": "https://res.cloudinary.com/demo/image/upload/sample_person4.jpg",
+      "tourGuideCertificate": "https://res.cloudinary.com/demo/image/upload/sample_certificate4.pdf"
+    },
+    "status": "approved",
+    "submittedAt": "2024-01-16T10:00:00.000Z",
+    "reviewedAt": "2024-01-17T09:15:00.000Z",
+    "reviewedBy": "5c8a1d5b0190b214360dc057",
+    "createdAt": "2024-01-16T08:00:00.000Z",
+    "updatedAt": "2024-01-17T09:15:00.000Z"
+  },
+  {
+    "_id": "7a8b9c0d1e2f3a4b5c6d7e93",
+    "user": "5c8a21f22f8fb814b56fa18a",
+    "personalInfo": {
+      "fullName": "Abebe Mekonnen",
+      "email": "abebe.mekonnen@example.com",
+      "phoneNumber": "+251955555555",
+      "cityRegion": "Bahir Dar, Ethiopia",
+      "fullAddress": "Bahir Dar City, Lake Tana Area, Guide Services Center, Building 3, Office 7",
+      "languagesSpoken": ["Amharic", "English", "Oromiffa"],
+      "aboutYou": "I am a specialized guide for the Lake Tana region and Blue Nile Falls. With 16 years of experience, I offer boat tours, nature tours, and cultural experiences. I have deep knowledge of the monasteries on Lake Tana, local birdlife, and the natural beauty of the region. I'm passionate about sustainable tourism and environmental conservation."
+    },
+    "experienceDetails": {
+      "experienceTypes": ["Boat Tours", "Nature Tours", "Cultural Tours", "Adventure Tours"],
+      "specialties": ["Lake Tana", "Blue Nile Falls", "Monastery Tours", "Bird Watching", "Nature Conservation"],
+      "previousExperience": "I've been guiding in the Bahir Dar region since 2008. I'm certified by the Ethiopian Ministry of Culture and Tourism and have specialized training in lake navigation and safety. I've worked with eco-tourism organizations and have been involved in conservation projects. I've guided thousands of visitors and received recognition for my environmental awareness."
+    },
+    "media": {
+      "nationalIdFront": "https://res.cloudinary.com/demo/image/upload/sample_id_front5.jpg",
+      "nationalIdBack": "https://res.cloudinary.com/demo/image/upload/sample_id_back5.jpg",
+      "personalPhoto": "https://res.cloudinary.com/demo/image/upload/sample_person5.jpg",
+      "tourGuideCertificate": "https://res.cloudinary.com/demo/image/upload/sample_certificate5.pdf"
+    },
+    "status": "approved",
+    "submittedAt": "2024-01-18T10:00:00.000Z",
+    "reviewedAt": "2024-01-19T13:45:00.000Z",
+    "reviewedBy": "5c8a1d5b0190b214360dc057",
+    "createdAt": "2024-01-18T09:00:00.000Z",
+    "updatedAt": "2024-01-19T13:45:00.000Z"
+  }
+]
+

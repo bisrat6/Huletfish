@@ -47,6 +47,31 @@ const userSchema = new mongoose.Schema({
     },
     faydaVerificationDate: Date
   },
+  guideStatus: {
+    type: String,
+    enum: ['none', 'pending', 'approved', 'rejected'],
+    default: 'none'
+  },
+  guideApplicationDate: Date,
+  // Guide application data
+  guideApplicationData: {
+    // Personal Information
+    fullName: String,
+    phoneNumber: String,
+    cityRegion: String,
+    fullAddress: String,
+    languagesSpoken: [String],
+    aboutYou: String,
+    // Media URLs
+    mediaUrls: [String]
+  },
+  // Location for guides (city/region)
+  location: String,
+  // Assigned guide for hosts
+  assignedGuide: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  },
   password: {
     type: String,
     required: [true, 'Please provide a password'],

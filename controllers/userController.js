@@ -78,3 +78,139 @@ exports.getAllUsers = factory.getAll(User);
 // Do NOT update passwords with this!
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
+
+// Get all approved guides with optional location filter
+exports.getAllGuides = catchAsync(async (req, res, next) => {
+  const { location } = req.query;
+  
+  const query = { guideStatus: 'approved' };
+  if (location) {
+    query.location = { $regex: location, $options: 'i' };
+  }
+  
+  const guides = await User.find(query)
+    .select('name email photo location guideApplicationData')
+    .sort('location name');
+  
+  res.status(200).json({
+    status: 'success',
+    results: guides.length,
+    data: {
+      guides
+    }
+  });
+});
+
+// Get hosts assigned to a guide
+exports.getAssignedHosts = catchAsync(async (req, res, next) => {
+  const guideId = req.params.guideId;
+  
+  // Verify the guide exists and is approved
+  const guide = await User.findById(guideId);
+  if (!guide || guide.guideStatus !== 'approved') {
+    return next(new AppError('Guide not found or not approved', 404));
+  }
+  
+  // Get all hosts assigned to this guide
+  const hosts = await User.find({ assignedGuide: guideId, hostStatus: 'approved' })
+    .select('name email photo hostApplicationData')
+    .populate('assignedGuide', 'name email location');
+  
+  res.status(200).json({
+    status: 'success',
+    results: hosts.length,
+    data: {
+      hosts
+    }
+  });
+});
+
+// Assign guide to host (Admin only)
+exports.assignGuideToHost = catchAsync(async (req, res, next) => {
+  const hostId = req.params.hostId;
+  const { guideId } = req.body;
+  
+  if (!guideId) {
+    return next(new AppError('Guide ID is required', 400));
+  }
+  
+  // Verify host exists and is approved
+  const host = await User.findById(hostId);
+  if (!host || host.hostStatus !== 'approved') {
+    return next(new AppError('Host not found or not approved', 404));
+  }
+  
+  // Verify guide exists and is approved
+  const guide = await User.findById(guideId);
+  if (!guide || guide.guideStatus !== 'approved') {
+    return next(new AppError('Guide not found or not approved', 404));
+  }
+  
+  // Assign guide to host
+  host.assignedGuide = guideId;
+  await host.save({ validateBeforeSave: false });
+  
+  res.status(200).json({
+    status: 'success',
+    message: 'Guide assigned to host successfully',
+    data: {
+      host,
+      guide: {
+        _id: guide._id,
+        name: guide.name,
+        email: guide.email,
+        location: guide.location
+      }
+    }
+  });
+});
+
+// Reassign host to different guide (Admin only)
+exports.reassignGuideToHost = catchAsync(async (req, res, next) => {
+  const hostId = req.params.hostId;
+  const { guideId } = req.body;
+  
+  // Verify host exists and is approved
+  const host = await User.findById(hostId);
+  if (!host || host.hostStatus !== 'approved') {
+    return next(new AppError('Host not found or not approved', 404));
+  }
+  
+  // If guideId is empty/null, remove guide assignment
+  if (!guideId || guideId === '') {
+    host.assignedGuide = undefined;
+    await host.save({ validateBeforeSave: false });
+    
+    return res.status(200).json({
+      status: 'success',
+      message: 'Guide assignment removed successfully',
+      data: {
+        host
+      }
+    });
+  }
+  
+  // Verify guide exists and is approved
+  const guide = await User.findById(guideId);
+  if (!guide || guide.guideStatus !== 'approved') {
+    return next(new AppError('Guide not found or not approved', 404));
+  }
+  
+  // Reassign guide to host
+  host.assignedGuide = guideId;
+  await host.save({ validateBeforeSave: false });
+  
+  res.status(200).json({
+    status: 'success',
+    message: 'Host reassigned to guide successfully',
+    data: {
+      host,
+      guide: {
+        _id: guide._id,
+        name: guide.name,
+        email: guide.email,
+        location: guide.location
+      }
+    }
+  });
+});

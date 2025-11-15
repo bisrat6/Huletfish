@@ -36,6 +36,19 @@ const hostMediaStorage = new CloudinaryStorage({
   }
 });
 
+// Storage configuration for guide application media
+const guideMediaStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'etxplore/guide-applications',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'pdf'],
+    transformation: [
+      { width: 1000, height: 1000, crop: 'limit' }
+    ],
+    resource_type: 'auto'
+  }
+});
+
 // Multer upload configuration
 const uploadHostMedia = multer({
   storage: hostMediaStorage,
@@ -45,8 +58,17 @@ const uploadHostMedia = multer({
   }
 });
 
+const uploadGuideMedia = multer({
+  storage: guideMediaStorage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  }
+});
+
 module.exports = {
   cloudinary,
-  uploadHostMedia
+  uploadHostMedia,
+  uploadGuideMedia
 };
 

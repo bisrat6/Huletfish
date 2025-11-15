@@ -6,6 +6,7 @@ const Experience = require('./../../models/experienceModel');
 const Review = require('./../../models/reviewModel');
 const User = require('./../../models/userModel');
 const HostApplication = require('./../../models/hostApplicationModel');
+const GuideApplication = require('./../../models/guideApplicationModel');
 
 dotenv.config({ path: path.join(__dirname, '..', '..', 'config.env') });
 
@@ -65,8 +66,9 @@ let users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
 users = users.map(user => ({
   ...user,
   passwordConfirm: user.passwordConfirm || user.password, // Set passwordConfirm for validation
-      hostStatus: user.hostStatus || (['admin', 'guide', 'lead-guide'].includes(user.role) ? 'approved' : 'none'),
-      role: ['guide', 'lead-guide'].includes(user.role) ? 'user' : user.role, // Convert guide/lead-guide to user
+  hostStatus: user.hostStatus || (user.role === 'admin' ? 'approved' : 'none'),
+  guideStatus: user.guideStatus || 'none', // Keep existing guideStatus or set to none
+  role: ['guide', 'lead-guide'].includes(user.role) ? 'user' : user.role, // Convert guide/lead-guide to user
   isVerified: user.isVerified !== undefined ? user.isVerified : true, // Auto-verify seeded users
   active: user.active !== undefined ? user.active : true
 }));
@@ -85,6 +87,16 @@ try {
   console.log('No host-applications.json found, skipping host applications import');
 }
 
+let guideApplications = [];
+try {
+  guideApplications = JSON.parse(
+    fs.readFileSync(`${__dirname}/guide-applications.json`, 'utf-8')
+  );
+  console.log(`Found ${guideApplications.length} guide applications to import`);
+} catch (err) {
+  console.log('No guide-applications.json found, skipping guide applications import');
+}
+
 // IMPORT DATA INTO DB
 const importData = async () => {
   try {
@@ -93,7 +105,34 @@ const importData = async () => {
     await User.deleteMany();
     await Review.deleteMany();
     await HostApplication.deleteMany();
+    await GuideApplication.deleteMany();
     console.log('Cleaned existing data');
+    
+    // Drop old indexes that might cause conflicts (after deletion, before insertion)
+    try {
+      const reviewCollection = mongoose.connection.collection('reviews');
+      // Get all indexes
+      const indexes = await reviewCollection.indexes();
+      // Drop any index that includes 'tour' field
+      for (const index of indexes) {
+        if (index.key && index.key.tour) {
+          try {
+            await reviewCollection.dropIndex(index.name);
+            console.log(`Dropped old index: ${index.name} from reviews collection`);
+          } catch (dropErr) {
+            // Index might already be dropped or in use
+            if (!dropErr.message.includes('index not found')) {
+              console.log(`Could not drop index ${index.name}:`, dropErr.message);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      // Collection might not exist yet, which is fine
+      if (!err.message.includes('not found')) {
+        console.log('Could not check/drop old indexes:', err.message);
+      }
+    }
     
     // Create users so we can reference them for host
     // Use insertMany with raw: true to bypass validators since passwords are already hashed
@@ -106,18 +145,49 @@ const importData = async () => {
       console.log('Host applications loaded!');
     }
     
+    // Create guide applications
+    if (guideApplications.length > 0) {
+      await GuideApplication.create(guideApplications);
+      console.log('Guide applications loaded!');
+    }
+    
     // Then create experiences
     await Experience.create(experiences);
     console.log('Experiences loaded!');
     
     // Update reviews to use experience instead of tour
-    const updatedReviews = reviews.map(review => ({
-      ...review,
-      experience: review.experience || review.tour
-    }));
+    // Remove tour field completely and ensure experience exists
+    const updatedReviews = reviews
+      .map(review => {
+        // Extract tour if it exists, otherwise use experience
+        const experienceId = review.experience || review.tour;
+        // Remove tour field completely
+        const { tour, ...reviewWithoutTour } = review;
+        return {
+          ...reviewWithoutTour,
+          experience: experienceId
+        };
+      })
+      .filter(review => review.experience && review.user); // Only keep reviews with valid experience and user
     
-    await Review.create(updatedReviews);
-    console.log('Reviews loaded!');
+    if (updatedReviews.length > 0) {
+      // Use insertMany with ordered: false to continue on errors
+      // This helps if there are any duplicate key errors
+      try {
+        await Review.insertMany(updatedReviews, { ordered: false });
+        console.log(`Reviews loaded! (${updatedReviews.length} reviews)`);
+      } catch (insertErr) {
+        // Some reviews might fail due to duplicates, but others should succeed
+        if (insertErr.writeErrors) {
+          const successful = updatedReviews.length - insertErr.writeErrors.length;
+          console.log(`Reviews loaded! (${successful} successful, ${insertErr.writeErrors.length} skipped due to duplicates)`);
+        } else {
+          throw insertErr;
+        }
+      }
+    } else {
+      console.log('No valid reviews to load');
+    }
     
     console.log('Data successfully loaded!');
   } catch (err) {
@@ -133,6 +203,7 @@ const deleteData = async () => {
     await User.deleteMany();
     await Review.deleteMany();
     await HostApplication.deleteMany();
+    await GuideApplication.deleteMany();
     console.log('Data successfully deleted!');
   } catch (err) {
     console.log(err);

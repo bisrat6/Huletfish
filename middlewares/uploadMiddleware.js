@@ -1,5 +1,5 @@
 const multer = require('multer');
-const { uploadHostMedia } = require('../utils/multerConfig');
+const { uploadHostMedia, uploadGuideMedia } = require('../utils/multerConfig');
 const AppError = require('../utils/appError');
 
 // Middleware to upload host application media files
@@ -8,6 +8,14 @@ exports.uploadHostMediaFiles = uploadHostMedia.fields([
   { name: 'nationalIdBack', maxCount: 1 },
   { name: 'personalPhoto', maxCount: 1 },
   { name: 'hostingEnvironmentPhotos', maxCount: 5 }
+]);
+
+// Middleware to upload guide application media files
+exports.uploadGuideMediaFiles = uploadGuideMedia.fields([
+  { name: 'nationalIdFront', maxCount: 1 },
+  { name: 'nationalIdBack', maxCount: 1 },
+  { name: 'personalPhoto', maxCount: 1 },
+  { name: 'tourGuideCertificate', maxCount: 1 }
 ]);
 
 // Middleware to handle multer errors

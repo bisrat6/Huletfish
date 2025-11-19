@@ -19,8 +19,8 @@ const walletSchema = new mongoose.Schema(
     },
     currency: {
       type: String,
-      enum: ['USD'],
-      default: 'USD'
+      enum: ['ETB'],
+      default: 'ETB'
     }
   },
   {

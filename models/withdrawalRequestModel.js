@@ -27,8 +27,8 @@ const withdrawalRequestSchema = new mongoose.Schema(
     },
     currency: {
       type: String,
-      enum: ['USD'],
-      default: 'USD'
+      enum: ['ETB'],
+      default: 'ETB'
     },
     status: {
       type: String,

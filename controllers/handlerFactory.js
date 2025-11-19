@@ -71,18 +71,22 @@ exports.getAll = Model =>
     let filter = {};
     if (req.params.experienceId) filter = { experience: req.params.experienceId };
 
+    // Get total count before pagination for accurate pagination info
+    const totalCount = await Model.countDocuments(filter);
+
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
-    // const doc = await features.query.explain();
-    const doc = await features.query;
+    
+    // Use lean() for better performance - returns plain JS objects instead of Mongoose documents
+    const doc = await features.query.lean();
 
     // SEND RESPONSE
     res.status(200).json({
       status: 'success',
-      results: doc.length,
+      results: totalCount, // Return total count, not just current page count
       data: {
         data: doc
       }

@@ -7,19 +7,19 @@ module.exports = class Email {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    this.from = `Etxplore <${process.env.EMAIL_FROM ||
-      'noreply@etxplore.com'}>`;
+    this.from = `Hulet Fish <${process.env.EMAIL_FROM ||
+      'noreply@huletfish.com'}>`;
   }
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
       // Brevo (Sendinblue) API Transport
       return nodemailer.createTransport({
-        host: process.env.BREVO_HOST, // smtp-relay.brevo.com
-        port: process.env.BREVO_PORT, // 587
+        host: process.env.EMAIL_HOST, // smtp-relay.brevo.com
+        port: process.env.EMAIL_PORT, // 587
         auth: {
-          user: process.env.BREVO_USERNAME, // e.g. 98ac79001@smtp-brevo.com 
-          pass: process.env.BREVO_PASSWORD // your Brevo SMTP password
+          user: process.env.EMAIL_USERNAME, // e.g. 98ac79001@smtp-brevo.com 
+          pass: process.env.EMAIL_PASSWORD // your Brevo SMTP password
         }
       });
     }
@@ -57,7 +57,7 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send('welcome', 'Welcome to the Etxplore Family!');
+    await this.send('welcome', 'Welcome to the Hulet Fish Family!');
   }
 
   async sendPasswordReset() {

@@ -35,6 +35,8 @@ const reviewSchema = new mongoose.Schema(
 );
 
 reviewSchema.index({ experience: 1, user: 1 }, { unique: true });
+// Add index on experience alone for faster queries when fetching reviews by experience
+reviewSchema.index({ experience: 1, createdAt: -1 });
 
 reviewSchema.pre(/^find/, function(next) {
   // this.populate({

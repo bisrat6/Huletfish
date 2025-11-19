@@ -8,7 +8,14 @@ process.on('uncaughtException', err => {
   process.exit(1);
 });
 
-dotenv.config({ path: path.join(__dirname, 'config.env') });
+// Load environment variables from config.env if it exists (local development)
+// Otherwise use environment variables directly (production/Render)
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: path.join(__dirname, 'config.env') });
+} else {
+  // In production, dotenv will use process.env directly
+  dotenv.config();
+}
 const app = require('./app');
 
 // Prefer a hosted DATABASE env var, fall back to local connection string

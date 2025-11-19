@@ -2,7 +2,7 @@ const WithdrawalRequest = require('../models/withdrawalRequestModel');
 const { moveAvailableToPending } = require('./walletService');
 const AppError = require('../utils/appError');
 
-const MIN_WITHDRAWAL_CENTS = 1000; // $10
+const MIN_WITHDRAWAL_CENTS = 1000; // ETB 10.00
 
 async function validateHostCanWithdraw(user, amountCents) {
   if (!user) throw new AppError('Unauthorized', 401);
@@ -38,7 +38,7 @@ async function createWithdrawal({ user, amountCents, clientRequestId, destinatio
       host: user._id,
       clientRequestId: clientRequestId || undefined,
       amountCents,
-      currency: 'USD',
+      currency: 'ETB',
       status: 'pending_transfer',
       destination: normalizedDestination
     },

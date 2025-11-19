@@ -63,9 +63,11 @@ try {
 
 let users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
 // Add default values for new fields
+// IMPORTANT: Set all passwords to plain text "password123" so Mongoose can hash them properly
 users = users.map(user => ({
   ...user,
-  passwordConfirm: user.passwordConfirm || user.password, // Set passwordConfirm for validation
+  password: 'password123', // Use plain text password - Mongoose will hash it
+  passwordConfirm: 'password123', // Set passwordConfirm for validation
   hostStatus: user.hostStatus || (user.role === 'admin' ? 'approved' : 'none'),
   guideStatus: user.guideStatus || 'none', // Keep existing guideStatus or set to none
   role: ['guide', 'lead-guide'].includes(user.role) ? 'user' : user.role, // Convert guide/lead-guide to user
@@ -135,8 +137,11 @@ const importData = async () => {
     }
     
     // Create users so we can reference them for host
-    // Use insertMany with raw: true to bypass validators since passwords are already hashed
-    await User.insertMany(users);
+    // Use create() which will trigger pre-save hooks to hash passwords properly
+    // Create users one by one to ensure passwords are hashed correctly
+    for (const userData of users) {
+      await User.create(userData);
+    }
     console.log('Users loaded!');
     
     // Create host applications

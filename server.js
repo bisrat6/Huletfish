@@ -21,6 +21,21 @@ const app = require('./app');
 // Prefer a hosted DATABASE env var, fall back to local connection string
 const DB = process.env.DATABASE || process.env.DATABASE_LOCAL;
 
+// Validate database connection string
+if (!DB) {
+  console.error('ERROR: DATABASE connection string is not set!');
+  console.error('Please set the DATABASE environment variable in Render dashboard.');
+  process.exit(1);
+}
+
+// Validate that DB is a valid MongoDB connection string
+if (!DB.startsWith('mongodb://') && !DB.startsWith('mongodb+srv://')) {
+  console.error('ERROR: DATABASE connection string is invalid!');
+  console.error('Connection string must start with mongodb:// or mongodb+srv://');
+  console.error('Current value:', DB ? 'Set but invalid format' : 'Not set');
+  process.exit(1);
+}
+
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -32,6 +47,8 @@ mongoose
     process.exit(1);
   });
 
+// Use Render's PORT environment variable (Render sets this automatically)
+// Fall back to 3000 for local development
 const port = process.env.PORT || 3000;
 // Listen on all network interfaces (0.0.0.0) to allow connections from other machines
 const host = process.env.HOST || '0.0.0.0';

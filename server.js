@@ -16,6 +16,42 @@ if (process.env.NODE_ENV !== 'production') {
   // In production, dotenv will use process.env directly
   dotenv.config();
 }
+
+// Debug: Log environment variables (mask sensitive data)
+console.log('=== Environment Variables Debug ===');
+console.log('NODE_ENV:', process.env.NODE_ENV || 'NOT SET');
+console.log('PORT:', process.env.PORT || 'NOT SET (will use default 3000)');
+console.log('HOST:', process.env.HOST || 'NOT SET (will use default 0.0.0.0)');
+
+// Log DATABASE connection string (mask password for security)
+const dbString = process.env.DATABASE || process.env.DATABASE_LOCAL;
+if (dbString) {
+  // Mask password in connection string for logging
+  const maskedDB = dbString.replace(/:([^:@]+)@/, ':***MASKED***@');
+  console.log('DATABASE:', maskedDB);
+  console.log('DATABASE length:', dbString.length, 'characters');
+  console.log('DATABASE starts with mongodb:', dbString.startsWith('mongodb://') || dbString.startsWith('mongodb+srv://'));
+} else {
+  console.log('DATABASE: NOT SET');
+  console.log('DATABASE_LOCAL:', process.env.DATABASE_LOCAL || 'NOT SET');
+}
+
+// Log other important environment variables (without sensitive values)
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'SET (' + process.env.JWT_SECRET.length + ' chars)' : 'NOT SET');
+console.log('JWT_EXPIRES_IN:', process.env.JWT_EXPIRES_IN || 'NOT SET');
+console.log('JWT_COOKIE_EXPIRES_IN:', process.env.JWT_COOKIE_EXPIRES_IN || 'NOT SET');
+console.log('EMAIL_HOST:', process.env.EMAIL_HOST || process.env.BREVO_HOST || 'NOT SET');
+console.log('CLOUDINARY_CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME || 'NOT SET');
+console.log('CHAPA_SECRET_KEY:', process.env.CHAPA_SECRET_KEY ? 'SET' : 'NOT SET');
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'NOT SET');
+
+// Log all environment variable keys (for debugging)
+console.log('\n=== All Environment Variable Keys ===');
+const envKeys = Object.keys(process.env).sort();
+console.log('Total env vars:', envKeys.length);
+console.log('Keys:', envKeys.join(', '));
+console.log('=====================================\n');
+
 const app = require('./app');
 
 // Prefer a hosted DATABASE env var, fall back to local connection string

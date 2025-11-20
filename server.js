@@ -55,7 +55,7 @@ console.log('=====================================\n');
 const app = require('./app');
 
 // Prefer a hosted DATABASE env var, fall back to local connection string
-glet DB = process.env.DATABASE || process.env.DATABASE_LOCAL;
+let DB = process.env.DATABASE || process.env.DATABASE_LOCAL;
 
 // Validate database connection string
 if (!DB) {
